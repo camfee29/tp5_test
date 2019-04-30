@@ -18,7 +18,7 @@ class Index extends Controller
         for ($i = 0; $i < 10; $i++) {
 
             $data[] = [
-                'contract_id' => ($page -1) * $limit + $i,
+                'contract_id' => ($page - 1) * $limit + $i,
                 'launch_time' => 'xxxxx',
                 'contract_no' => 'xxxxx',
                 'erp_contract_no' => 'xxxxx',
@@ -43,5 +43,10 @@ class Index extends Controller
             ];
         }
         exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data], JSON_UNESCAPED_UNICODE));
+    }
+
+    public function add()
+    {
+        return $this->fetch();
     }
 }

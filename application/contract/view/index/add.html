@@ -1,0 +1,375 @@
+<include file="public/layout" />
+
+<body>
+
+<div class="layui-container">
+    <div class="title-center">
+        <h2>合同信息</h2>
+    </div>
+    <div class="form-container">
+        <form class="layui-form" action="{:url('save')}">
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发起时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="launch_time" id="launch_time" lay-verify="date" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">流程审批ID</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="flow_id" lay-verify="flow_id" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">合同编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="contract_no" lay-verify="contract_no" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">ERP合同号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="erp_contract_no" lay-verify="erp_contract_no" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">客户单位</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="customer" lay-verify="customer" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">调整后客户单位</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="final_customer" lay-verify="final_customer" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">4A代理公司</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="agency" lay-verify="agency" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">代理政策类型</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="agency_type" lay-verify="agency_type" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">主品牌</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="mian_brand" lay-verify="mian_brand" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">品牌</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="brand" lay-verify="brand" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">品牌行业分类</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="brand_type" lay-verify="brand_type" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否新品</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="is_new" lay-verify="is_new" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">渠道组</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="channel" lay-verify="channel" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">渠道经理</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="channel_manager" lay-verify="channel_manager" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">合同开始日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="start_time" id="start_time" lay-verify="start_time" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">合同结束日期</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="end_time" id="end_time" lay-verify="end_time" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单价</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="price" lay-verify="price" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">投放量</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="put_volume" lay-verify="put_volume" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">合同结算金额</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="final_amount" lay-verify="final_amount" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">合同金额</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="amount" lay-verify="amount" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">广告类型</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ad_type" lay-verify="ad_type" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">本土项目级别</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="item_level" lay-verify="item_level" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">本土新品奖励</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="local_new" lay-verify="local_new" autocomplete="off" placeholder="%" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">本土按时垫资奖励</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="local_fund" lay-verify="local_fund" autocomplete="off" placeholder="%" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">本土特殊比例</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="local_special" lay-verify="local_special" autocomplete="off" placeholder="%" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">4A基础比例</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="agency_base" lay-verify="agency_base" autocomplete="off" placeholder="%" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">4A按时垫资奖励</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="agency_fund" lay-verify="agency_fund" autocomplete="off" placeholder="%" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">4A集团代理服务费比例</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="agency_fee" lay-verify="agency_fee" autocomplete="off" placeholder="%" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">4A特殊比例</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="4A特殊比例" lay-verify="4A特殊比例" autocomplete="off" placeholder="%" class="layui-input">
+                            </div>
+                        </div>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">合作内容</label>
+                            <div class="layui-input-block">
+                                <textarea placeholder="" class="layui-textarea" name="content"></textarea>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">付款约定</label>
+                            <div class="layui-input-block">
+                                <textarea placeholder="" class="layui-textarea" name="payment"></textarea>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                <textarea placeholder="" class="layui-textarea" name="remark"></textarea>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="div">
+                <div><a href="javascript:void(0)" class="layui-btn" id="add_tpl">增行</a> <a href="javascript:void(0)" class="layui-btn layui-btn-primary" id="del_tpl">删行</a></div>
+                <table class="layui-table" id="table-direct" style="width: 100%;">
+                    <tr id="table-direct-th">
+                        <td>直客组</td>
+                        <td>直客经理</td>
+                        <td>拆分比例%</td>
+                    </tr>
+                    <tr>
+                        <td class="input-td"><input type="text" name="[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="[]" value="" class="input-text"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="layui-form-item" style="text-align: center">
+                <button class="layui-btn" lay-submit="" lay-filter="submit">提交</button>
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="return">返回</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var $ = layui.$;
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        //日期
+        laydate.render({
+            elem: '#launch_time',
+            trigger: 'click',
+        });
+        laydate.render({
+            elem: '#start_time',
+            trigger: 'click',
+        });
+        laydate.render({
+            elem: '#end_time',
+            trigger: 'click',
+        });
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+        //自定义验证规则
+        form.verify({
+            title: function(value){
+                if(value.length < 5){
+                    return '标题至少得5个字符啊';
+                }
+            }
+            ,pass: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ]
+            ,content: function(value){
+                layedit.sync(editIndex);
+            }
+        });
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
+        $('#add_tpl').on('click',function () {
+            var tpl = '<tr><td class="input-td"><input type="text" name="[]" value="" class="input-text"></td><td class="input-td"><input type="text" name="[]" value="" class="input-text"></td><td class="input-td"><input type="text" name="[]" value="" class="input-text"></td></tr>';
+            $('#table-direct').append(tpl);
+        });
+        $('#del_tpl').on('click',function () {
+            if ($('#table-direct tr').size() > 1) {
+                $('#table-direct tr').last().remove();
+            } else {
+                layer.alert('已全部删除',{'icon':2});
+            }
+        });
+    });
+</script>
+</body>
+</html>
