@@ -1,11 +1,4 @@
-./nbproject/private/
-./public/upload/*
-./runtime:
-.idea/*
-.idea
-./runtime/*
+/nbproject/private/
+.idea/
 /runtime/
-/.idea/
 /workshop/
-/public/upload/
-s
