@@ -4,7 +4,7 @@
 
 <div class="layui-container">
     <div class="title-center">
-        <h2>合同信息列表</h2>
+        <h2>到账信息</h2>
     </div>
     <div class="search-form">
         <form class="layui-form" action="">
@@ -119,13 +119,16 @@
         </form>
     </div>
 
-    <div><a href="{:url('add')}" class="layui-btn">新增</a></div>
-
-    <table class="layui-table" lay-data="{url:'{:url("ajaxIndex")}', page:true, id:'data_table'}" lay-filter="data_table">
+    <table class="layui-table" lay-data="{url:'{:url("ajaxReceipt")}', page:true, id:'data_table'}" lay-filter="data_table">
         <thead>
         <tr>
-            <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
-            <th lay-data="{field:'contract_id', width:80, sort: true}">序号</th>
+            <th lay-data="{field:'id', width:80, sort: true}">序号</th>
+            <th lay-data="{field:'receipt_date', width:110, sort: true}">到账日期</th>
+            <th lay-data="{field:'receipt_amount', width:95, sort: true}">到账金额</th>
+            <th lay-data="{field:'receipt_type', width:90}">到账类型</th>
+            <th lay-data="{field:'ex_contract_no', width:120, sort: true}">冲抵合同编号</th>
+            <th lay-data="{field:'expect_date', width:110, sort: true}">应收日期</th>
+            <th lay-data="{field:'expect_amount', width:95, sort: true}">应收金额</th>
             <th lay-data="{field:'launch_time', width:120, sort: true}">合同发起时间</th>
             <th lay-data="{field:'contract_no', width:120}">流程合同编号</th>
             <th lay-data="{field:'erp_contract_no', width:105}">ERP合同号</th>
@@ -147,18 +150,9 @@
             <th lay-data="{field:'balance_amount', width:95, sort: true}">结算余额</th>
             <th lay-data="{field:'balance', width:120, sort: true}">可用结算余额</th>
             <th lay-data="{field:'ad_type', width:95, sort: true}">广告类型</th>
-            <th lay-data="{fixed: 'right', width:215, align:'center', toolbar: '#barOperate'}">操作</th>
         </tr>
         </thead>
     </table>
-
-    <script type="text/html" id="barOperate">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a href="{:url('expect_receipt')}" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="expect">应收</a>
-        <a href="{:url('expect_receipt')}" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="receipt">到账</a>
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="duty">权责</a>
-        <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
-    </script>
 </div>
 
 <script>

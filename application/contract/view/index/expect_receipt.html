@@ -1,0 +1,166 @@
+<include file="public/layout" />
+
+<body>
+
+<div class="layui-container">
+    <div class="title-center">
+        <h2>合同应收到账信息</h2>
+    </div>
+    <div class="form-container">
+        <form class="layui-form" method="post" action="{:url('expect')}">
+            <input type="hidden" name="contract_id" value="">
+            <div class="div">
+                <div>
+                    <a href="javascript:void(0)" class="layui-btn" id="add_tpl_expect">增行</a>
+                    <a href="javascript:void(0)" class="layui-btn layui-btn-primary" id="del_tpl_expect">删行</a>
+                    &nbsp; &nbsp; <span>应收信息</span>
+                </div>
+                <table class="layui-table" id="table-expect" style="width: 100%;">
+                    <tr>
+                        <td>应收日期</td>
+                        <td>应收金额</td>
+                        <td>是否已返点</td>
+                    </tr>
+                    <tr>
+                        <td class="input-td"><input type="text" name="expect_date[]" value="" class="input-text"><input type="hidden" name="id[]" value=""></td>
+                        <td class="input-td"><input type="text" name="amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="div">
+                <div>
+                    <a href="javascript:void(0)" class="layui-btn" id="add_tpl_receipt">增行</a>
+                    <a href="javascript:void(0)" class="layui-btn layui-btn-primary" id="del_tpl_receipt">删行</a>
+                    &nbsp; &nbsp; <span>到账信息</span>
+                </div>
+                <table class="layui-table" id="table-receipt" style="width: 100%;">
+                    <tr>
+                        <td>应收日期</td>
+                        <td>应收金额</td>
+                        <td>到账日期</td>
+                        <td>到账金额</td>
+                        <td>到账类型</td>
+                        <td>冲抵合同编号</td>
+                        <td>是否已返点</td>
+                        <td>本土新品奖励比例</td>
+                        <td>本土新品奖励</td>
+                        <td>本土按时垫资奖励比例</td>
+                        <td>本土按时垫资奖励</td>
+                        <td>本土特殊比例</td>
+                        <td>本土特殊金额</td>
+                        <td>4A基础比例</td>
+                        <td>4A基础金额</td>
+                        <td>4A按时垫资奖励比例</td>
+                        <td>4A按时垫资奖励</td>
+                        <td>4A特殊比例</td>
+                        <td>4A特殊金额</td>
+                        <td>4A集团代理服务费比例</td>
+                        <td>4A集团代理服务费</td>
+                    </tr>
+                    <tr>
+                        <td class="input-td"><input type="text" name="expect_date[]" value="" class="input-text"><input type="hidden" name="id[]" value=""></td>
+                        <td class="input-td"><input type="text" name="expect_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt_date[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><select name="receipt_type[]" class="input-select"><option value="1">现金</option><option value="2">冲抵</option></select></td>
+                        <td class="input-td"><input type="text" name="contract_no[]" value="" class="input-text"></td>
+                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td>
+                        <td class="input-td"><input type="text" name="local_new[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_new_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_fund[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_fund_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_special[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_special_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_base[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_base_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fund[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fund_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_special[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_special_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fee[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fee_amount[]" value="" class="input-text"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="layui-form-item" style="text-align: center">
+                <button class="layui-btn" lay-submit="" lay-filter="submit">提交</button>
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="return">返回</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var $ = layui.$;
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+        //日期
+        laydate.render({
+            elem: '#launch_time',
+            trigger: 'click',
+        });
+        laydate.render({
+            elem: '#start_time',
+            trigger: 'click',
+        });
+        laydate.render({
+            elem: '#end_time',
+            trigger: 'click',
+        });
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+        //自定义验证规则
+        form.verify({
+            title: function(value){
+                if(value.length < 5){
+                    return '标题至少得5个字符啊';
+                }
+            }
+            ,pass: [
+                /^[\S]{6,12}$/
+                ,'密码必须6到12位，且不能出现空格'
+            ]
+            ,content: function(value){
+                layedit.sync(editIndex);
+            }
+        });
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            })
+            return false;
+        });
+        $('#add_tpl_expect').on('click',function () {
+            var tpl = '<tr><td class="input-td"><input type="text" name="expect_date[]" value="" class="input-text"><input type="hidden" name="id[]"></td><td class="input-td"><input type="text" name="amount[]" value="" class="input-text"></td><td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td></tr>';
+            $('#table-expect').append(tpl);
+            form.render();
+        });
+        $('#del_tpl_expect').on('click',function () {
+            if ($('#table-expect tr').size() > 1) {
+                $('#table-expect tr').last().remove();
+            } else {
+                layer.alert('已全部删除',{'icon':2});
+            }
+        });
+        $('#add_tpl_receipt').on('click',function () {
+            var tpl = '<tr><td class="input-td"><input type="text" name="expect_date[]" class="input-text"><input type="hidden" name="id[]"></td><td class="input-td"><input type="text" name="expect_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="receipt_date[]"  class="input-text"></td><td class="input-td"><input type="text" name="receipt_amount[]" class="input-text"></td><td class="input-td"><select name="receipt_type[]" class="input-select"><option value="1">现金</option><option value="2">冲抵</option></select></td><td class="input-td"><input type="text" name="contract_no[]" class="input-text"></td><td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td><td class="input-td"><input type="text" name="local_new[]" class="input-text"></td><td class="input-td"><input type="text" name="local_new_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="local_fund[]" class="input-text"></td><td class="input-td"><input type="text" name="local_fund_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="local_special[]" class="input-text"></td><td class="input-td"><input type="text" name="local_special_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_base[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_base_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fund[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fund_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_special[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_special_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fee[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fee_amount[]" class="input-text"></td></tr>';
+            $('#table-receipt').append(tpl);
+            form.render();
+        });
+        $('#del_tpl_receipt').on('click',function () {
+            if ($('#table-receipt tr').size() > 1) {
+                $('#table-receipt tr').last().remove();
+            } else {
+                layer.alert('已全部删除',{'icon':2});
+            }
+        });
+    });
+</script>
+</body>
+</html>

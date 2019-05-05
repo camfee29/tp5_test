@@ -1,5 +1,6 @@
 .title-center{text-align: center; margin: 10px auto}
 .search-form{border: #e6e6e6 1px solid; border-radius: 5px; margin: 10px auto; padding: 10px 15px;}
 .div{margin: 10px auto 20px}
-tr td .input-text{width:100%;height: 100%;border: none; padding: 9px 0;}
 .layui-table tr .input-td{padding: 0;}
+tr td .input-text{width:100%;height: 100%;border: none; padding: 9px 0;}
+tr td .input-select{width:100%;height: 100%;border: none; padding: 9px 0;}

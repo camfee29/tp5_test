@@ -4,10 +4,10 @@
 
 <div class="layui-container">
     <div class="title-center">
-        <h2>合同信息</h2>
+        <h2>合同基本信息</h2>
     </div>
     <div class="form-container">
-        <form class="layui-form" action="{:url('save')}">
+        <form class="layui-form" method="post" action="{:url('save')}">
             <table style="width: 100%;">
                 <tr>
                     <td>
@@ -300,9 +300,9 @@
                         <td>拆分比例%</td>
                     </tr>
                     <tr>
-                        <td class="input-td"><input type="text" name="[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="direct_group[]" value="" class="input-text"><input type="hidden" name="id[]" value=""></td>
+                        <td class="input-td"><input type="text" name="direct_manager[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="rate[]" value="" class="input-text"></td>
                     </tr>
                 </table>
             </div>
@@ -359,7 +359,7 @@
             return false;
         });
         $('#add_tpl').on('click',function () {
-            var tpl = '<tr><td class="input-td"><input type="text" name="[]" value="" class="input-text"></td><td class="input-td"><input type="text" name="[]" value="" class="input-text"></td><td class="input-td"><input type="text" name="[]" value="" class="input-text"></td></tr>';
+            var tpl = '<tr><td class="input-td"><input type="text" name="direct_group[]" value="" class="input-text"><input type="hidden" name="id[]"></td><td class="input-td"><input type="text" name="direct_manager[]" value="" class="input-text"></td><td class="input-td"><input type="text" name="rate[]" value="" class="input-text"></td></tr>';
             $('#table-direct').append(tpl);
         });
         $('#del_tpl').on('click',function () {
