@@ -8,13 +8,14 @@
     </div>
     <div class="form-container">
         <form class="layui-form" method="post" action="{:url('save')}">
+            <input type="hidden" name="contract_id" value="{:isset($info.contract_id)?$info.contract_id:''}">
             <table style="width: 100%;">
                 <tr>
                     <td>
                         <div class="layui-inline">
                             <label class="layui-form-label">发起时间</label>
                             <div class="layui-input-block">
-                                <input type="text" name="launch_time" id="launch_time" lay-verify="date" autocomplete="off" class="layui-input">
+                                <input type="text" name="launch_time" id="launch_time" lay-verify="date" autocomplete="off" class="layui-input" value="{:isset($info.launch_time)?$info.launch_time:''}">
                             </div>
                         </div>
                     </td>
@@ -22,7 +23,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">流程审批ID</label>
                             <div class="layui-input-block">
-                                <input type="text" name="flow_id" lay-verify="flow_id" autocomplete="off" class="layui-input">
+                                <input type="text" name="flow_id" lay-verify="flow_id" autocomplete="off" class="layui-input" value="{:isset($info.flow_id)?$info.flow_id:''}">
                             </div>
                         </div>
                     </td>
@@ -30,7 +31,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">合同编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="contract_no" lay-verify="contract_no" autocomplete="off" class="layui-input">
+                                <input type="text" name="contract_no" lay-verify="contract_no" autocomplete="off" class="layui-input" value="{:isset($info.contract_no)?$info.contract_no:''}">
                             </div>
                         </div>
                     </td>
@@ -38,7 +39,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">ERP合同号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="erp_contract_no" lay-verify="erp_contract_no" autocomplete="off" class="layui-input">
+                                <input type="text" name="erp_contract_no" lay-verify="erp_contract_no" autocomplete="off" class="layui-input" value="{:isset($info.erp_contract_no)?$info.erp_contract_no:''}">
                             </div>
                         </div>
                     </td>
@@ -48,7 +49,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">客户单位</label>
                             <div class="layui-input-block">
-                                <input type="text" name="customer" lay-verify="customer" autocomplete="off" class="layui-input">
+                                <input type="text" name="customer" lay-verify="customer" autocomplete="off" class="layui-input" value="{:isset($info.customer)?$info.customer:''}">
                             </div>
                         </div>
                     </td>
@@ -56,7 +57,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">调整后客户单位</label>
                             <div class="layui-input-block">
-                                <input type="text" name="final_customer" lay-verify="final_customer" autocomplete="off" class="layui-input">
+                                <input type="text" name="final_customer" lay-verify="final_customer" autocomplete="off" class="layui-input" value="{:isset($info.final_customer)?$info.final_customer:''}">
                             </div>
                         </div>
                     </td>
@@ -64,7 +65,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">4A代理公司</label>
                             <div class="layui-input-block">
-                                <input type="text" name="agency" lay-verify="agency" autocomplete="off" class="layui-input">
+                                <input type="text" name="agency" lay-verify="agency" autocomplete="off" class="layui-input" value="{:isset($info.agency)?$info.agency:''}">
                             </div>
                         </div>
                     </td>
@@ -72,7 +73,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">代理政策类型</label>
                             <div class="layui-input-block">
-                                <input type="text" name="agency_type" lay-verify="agency_type" autocomplete="off" class="layui-input">
+                                <input type="text" name="agency_type" lay-verify="agency_type" autocomplete="off" class="layui-input" value="{:isset($info.agency_type)?$info.agency_type:''}">
                             </div>
                         </div>
                     </td>
@@ -82,7 +83,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">主品牌</label>
                             <div class="layui-input-block">
-                                <input type="text" name="mian_brand" lay-verify="mian_brand" autocomplete="off" class="layui-input">
+                                <input type="text" name="mian_brand" lay-verify="mian_brand" autocomplete="off" class="layui-input" value="{:isset($info.mian_brand)?$info.mian_brand:''}">
                             </div>
                         </div>
                     </td>
@@ -90,7 +91,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">品牌</label>
                             <div class="layui-input-block">
-                                <input type="text" name="brand" lay-verify="brand" autocomplete="off" class="layui-input">
+                                <input type="text" name="brand" lay-verify="brand" autocomplete="off" class="layui-input" value="{:isset($info.brand)?$info.brand:''}">
                             </div>
                         </div>
                     </td>
@@ -98,7 +99,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">品牌行业分类</label>
                             <div class="layui-input-block">
-                                <input type="text" name="brand_type" lay-verify="brand_type" autocomplete="off" class="layui-input">
+                                <input type="text" name="brand_type" lay-verify="brand_type" autocomplete="off" class="layui-input" value="{:isset($info.brand_type)?$info.brand_type:''}">
                             </div>
                         </div>
                     </td>
@@ -106,7 +107,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">是否新品</label>
                             <div class="layui-input-block">
-                                <input type="text" name="is_new" lay-verify="is_new" autocomplete="off" class="layui-input">
+                                <input type="text" name="is_new" lay-verify="is_new" autocomplete="off" class="layui-input"  value="{:isset($info.is_new)?$info.is_new:''}">
                             </div>
                         </div>
                     </td>
@@ -116,7 +117,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">渠道组</label>
                             <div class="layui-input-block">
-                                <input type="text" name="channel" lay-verify="channel" autocomplete="off" class="layui-input">
+                                <input type="text" name="channel" lay-verify="channel" autocomplete="off" class="layui-input" value="{:isset($info.channel)?$info.channel:''}">
                             </div>
                         </div>
                     </td>
@@ -124,7 +125,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">渠道经理</label>
                             <div class="layui-input-block">
-                                <input type="text" name="channel_manager" lay-verify="channel_manager" autocomplete="off" class="layui-input">
+                                <input type="text" name="channel_manager" lay-verify="channel_manager" autocomplete="off" class="layui-input" value="{:isset($info.channel_manager)?$info.channel_manager:''}">
                             </div>
                         </div>
                     </td>
@@ -132,7 +133,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">合同开始日期</label>
                             <div class="layui-input-block">
-                                <input type="text" name="start_time" id="start_time" lay-verify="start_time" autocomplete="off" class="layui-input">
+                                <input type="text" name="start_time" id="start_time" lay-verify="start_time" autocomplete="off" class="layui-input" value="{:isset($info.start_time)?$info.start_time:''}">
                             </div>
                         </div>
                     </td>
@@ -140,7 +141,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">合同结束日期</label>
                             <div class="layui-input-block">
-                                <input type="text" name="end_time" id="end_time" lay-verify="end_time" autocomplete="off" class="layui-input">
+                                <input type="text" name="end_time" id="end_time" lay-verify="end_time" autocomplete="off" class="layui-input" value="{:isset($info.end_time)?$info.end_time:''}">
                             </div>
                         </div>
                     </td>
@@ -150,7 +151,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">单价</label>
                             <div class="layui-input-block">
-                                <input type="text" name="price" lay-verify="price" autocomplete="off" class="layui-input">
+                                <input type="text" name="price" lay-verify="price" autocomplete="off" class="layui-input" value="{:isset($info.price)?$info.price:''}">
                             </div>
                         </div>
                     </td>
@@ -158,7 +159,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">投放量</label>
                             <div class="layui-input-block">
-                                <input type="text" name="put_volume" lay-verify="put_volume" autocomplete="off" class="layui-input">
+                                <input type="text" name="put_volume" lay-verify="put_volume" autocomplete="off" class="layui-input" value="{:isset($info.put_volume)?$info.put_volume:''}">
                             </div>
                         </div>
                     </td>
@@ -166,7 +167,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">合同结算金额</label>
                             <div class="layui-input-block">
-                                <input type="text" name="final_amount" lay-verify="final_amount" autocomplete="off" class="layui-input">
+                                <input type="text" name="final_amount" lay-verify="final_amount" autocomplete="off" class="layui-input"  value="{:isset($info.final_amount)?$info.final_amount:''}">
                             </div>
                         </div>
                     </td>
@@ -174,7 +175,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">合同金额</label>
                             <div class="layui-input-block">
-                                <input type="text" name="amount" lay-verify="amount" autocomplete="off" class="layui-input">
+                                <input type="text" name="amount" lay-verify="amount" autocomplete="off" class="layui-input" value="{:isset($info.amount)?$info.amount:''}">
                             </div>
                         </div>
                     </td>
@@ -184,7 +185,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">广告类型</label>
                             <div class="layui-input-block">
-                                <input type="text" name="ad_type" lay-verify="ad_type" autocomplete="off" class="layui-input">
+                                <input type="text" name="ad_type" lay-verify="ad_type" autocomplete="off" class="layui-input" value="{:isset($info.ad_type)?$info.ad_type:''}">
                             </div>
                         </div>
                     </td>
@@ -192,7 +193,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">本土项目级别</label>
                             <div class="layui-input-block">
-                                <input type="text" name="item_level" lay-verify="item_level" autocomplete="off" class="layui-input">
+                                <input type="text" name="item_level" lay-verify="item_level" autocomplete="off" class="layui-input" value="{:isset($info.item_level)?$info.item_level:''}">
                             </div>
                         </div>
                     </td>
@@ -200,7 +201,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">本土新品奖励</label>
                             <div class="layui-input-block">
-                                <input type="text" name="local_new" lay-verify="local_new" autocomplete="off" placeholder="%" class="layui-input">
+                                <input type="text" name="local_new" lay-verify="local_new" autocomplete="off" placeholder="%" class="layui-input" value="{:isset($info.local_new)?$info.local_new:''}">
                             </div>
                         </div>
                     </td>
@@ -208,7 +209,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">本土按时垫资奖励</label>
                             <div class="layui-input-block">
-                                <input type="text" name="local_fund" lay-verify="local_fund" autocomplete="off" placeholder="%" class="layui-input">
+                                <input type="text" name="local_fund" lay-verify="local_fund" autocomplete="off" placeholder="%" class="layui-input" value="{:isset($info.local_fund)?$info.local_fund:''}">
                             </div>
                         </div>
                     </td>
@@ -218,7 +219,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">本土特殊比例</label>
                             <div class="layui-input-block">
-                                <input type="text" name="local_special" lay-verify="local_special" autocomplete="off" placeholder="%" class="layui-input">
+                                <input type="text" name="local_special" lay-verify="local_special" autocomplete="off" placeholder="%" class="layui-input" value="{:isset($info.local_special)?$info.local_special:''}">
                             </div>
                         </div>
                     </td>
@@ -226,7 +227,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">4A基础比例</label>
                             <div class="layui-input-block">
-                                <input type="text" name="agency_base" lay-verify="agency_base" autocomplete="off" placeholder="%" class="layui-input">
+                                <input type="text" name="agency_base" lay-verify="agency_base" autocomplete="off" placeholder="%" class="layui-input" value="{:isset($info.agency_base)?$info.agency_base:''}">
                             </div>
                         </div>
                     </td>
@@ -234,7 +235,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">4A按时垫资奖励</label>
                             <div class="layui-input-block">
-                                <input type="text" name="agency_fund" lay-verify="agency_fund" autocomplete="off" placeholder="%" class="layui-input">
+                                <input type="text" name="agency_fund" lay-verify="agency_fund" autocomplete="off" placeholder="%" class="layui-input" value="{:isset($info.agency_base)?$info.agency_base:''}">
                             </div>
                         </div>
                     </td>
@@ -242,7 +243,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">4A集团代理服务费比例</label>
                             <div class="layui-input-block">
-                                <input type="text" name="agency_fee" lay-verify="agency_fee" autocomplete="off" placeholder="%" class="layui-input">
+                                <input type="text" name="agency_fee" lay-verify="agency_fee" autocomplete="off" placeholder="%" class="layui-input" value="{:isset($info.agency_fee)?$info.agency_fee:''}">
                             </div>
                         </div>
                     </td>
@@ -252,7 +253,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">4A特殊比例</label>
                             <div class="layui-input-block">
-                                <input type="text" name="4A特殊比例" lay-verify="4A特殊比例" autocomplete="off" placeholder="%" class="layui-input">
+                                <input type="text" name="agency_special" lay-verify="agency_special" autocomplete="off" placeholder="%" class="layui-input" value="{:isset($info.agency_special)?$info.agency_special:''}">
                             </div>
                         </div>
                     </td>
@@ -265,7 +266,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">合作内容</label>
                             <div class="layui-input-block">
-                                <textarea placeholder="" class="layui-textarea" name="content"></textarea>
+                                <textarea placeholder="" class="layui-textarea" name="content">{:isset($info.content)?$info.content:''}</textarea>
                             </div>
                         </div>
                     </td>
@@ -275,7 +276,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">付款约定</label>
                             <div class="layui-input-block">
-                                <textarea placeholder="" class="layui-textarea" name="payment"></textarea>
+                                <textarea placeholder="" class="layui-textarea" name="payment">{:isset($info.payment)?$info.payment:''}</textarea>
                             </div>
                         </div>
                     </td>
@@ -285,7 +286,7 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">备注</label>
                             <div class="layui-input-block">
-                                <textarea placeholder="" class="layui-textarea" name="remark"></textarea>
+                                <textarea placeholder="" class="layui-textarea" name="remark">{:isset($info.remark)?$info.remark:''}</textarea>
                             </div>
                         </div>
                     </td>
@@ -299,11 +300,13 @@
                         <td>直客经理</td>
                         <td>拆分比例%</td>
                     </tr>
+                    <volist name="direct" id="vo">
                     <tr>
-                        <td class="input-td"><input type="text" name="direct_group[]" value="" class="input-text"><input type="hidden" name="id[]" value=""></td>
-                        <td class="input-td"><input type="text" name="direct_manager[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="rate[]" value="" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="direct_group[]" value="{$vo.direct_group}" class="input-text"><input type="hidden" name="id[]" value="{$vo.id}"></td>
+                        <td class="input-td"><input type="text" name="direct_manager[]" value="{$vo.direct_manager}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="rate[]" value="{$vo.rate}" class="input-text"></td>
                     </tr>
+                    </volist>
                 </table>
             </div>
             <div class="layui-form-item" style="text-align: center">

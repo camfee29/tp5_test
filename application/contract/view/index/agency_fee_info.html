@@ -1,0 +1,68 @@
+<include file="public/layout" />
+
+<body>
+
+<div class="layui-container">
+    <div class="title-center">
+        <h2>代理服务器明细</h2>
+    </div>
+
+    <table class="layui-table" id="table-receipt" style="width: 100%;">
+        <tr>
+            <td>应收日期</td>
+            <td>应收金额</td>
+            <td>到账日期</td>
+            <td>到账金额</td>
+            <td>到账类型</td>
+            <td>冲抵合同编号</td>
+            <td>是否已返点</td>
+            <td>本土新品奖励比例</td>
+            <td>本土新品奖励</td>
+            <td>本土按时垫资奖励比例</td>
+            <td>本土按时垫资奖励</td>
+            <td>本土特殊比例</td>
+            <td>本土特殊金额</td>
+            <td>4A基础比例</td>
+            <td>4A基础金额</td>
+            <td>4A按时垫资奖励比例</td>
+            <td>4A按时垫资奖励</td>
+            <td>4A特殊比例</td>
+            <td>4A特殊金额</td>
+            <td>4A集团代理服务费比例</td>
+            <td>4A集团代理服务费</td>
+        </tr>
+        <volist name="list" id="vo">
+        <tr>
+            <td class="input-td">{$vo.expect_date}</td>
+            <td class="input-td">{$vo.expect_amount}</td>
+            <td class="input-td">{$vo.receipt_date}</td>
+            <td class="input-td">{$vo.receipt_amount}</td>
+            <td class="input-td">{$vo.receipt_type}</td>
+            <td class="input-td">{$vo.is_return}</td>
+            <td class="input-td">{$vo.local_new}</td>
+            <td class="input-td">{$vo.local_new_amount}</td>
+            <td class="input-td">{$vo.local_fund}</td>
+            <td class="input-td">{$vo.local_fund_amount}</td>
+            <td class="input-td">{$vo.local_special}</td>
+            <td class="input-td">{$vo.local_special_amount}</td>
+            <td class="input-td">{$vo.agency_base}</td>
+            <td class="input-td">{$vo.agency_base_amount}</td>
+            <td class="input-td">{$vo.agency_fund}</td>
+            <td class="input-td">{$vo.agency_fund_amount}</td>
+            <td class="input-td">{$vo.agency_special}</td>
+            <td class="input-td">{$vo.agency_special_amount}</td>
+            <td class="input-td">{$vo.agency_fee}</td>
+            <td class="input-td">{$vo.agency_fee_amount}</td>
+        </tr>
+        </volist>
+    </table>
+</div>
+
+<script>
+    layui.use(['table'], function(){
+        var $ = layui.$,
+            table = layui.table;
+    });
+</script>
+</body>
+</html>

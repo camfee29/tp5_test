@@ -7,7 +7,7 @@
         <h2>合同应收到账信息</h2>
     </div>
     <div class="form-container">
-        <form class="layui-form" method="post" action="{:url('expect')}">
+        <form class="layui-form" method="post" action="{:url('expect_receipt')}">
             <input type="hidden" name="contract_id" value="">
             <div class="div">
                 <div>
@@ -21,11 +21,13 @@
                         <td>应收金额</td>
                         <td>是否已返点</td>
                     </tr>
+                    <volist name="expect" id="vo">
                     <tr>
-                        <td class="input-td"><input type="text" name="expect_date[]" value="" class="input-text"><input type="hidden" name="id[]" value=""></td>
-                        <td class="input-td"><input type="text" name="amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td>
+                        <td class="input-td"><input type="text" name="expect_date[]" value="{$vo.expect_date}" class="input-text"><input type="hidden" name="id[]" value="{$vo.id}"></td>
+                        <td class="input-td"><input type="text" name="expect_amount[]" value="{$vo.expect_amount}" class="input-text"></td>
+                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0" <if condition="$vo.is_return eq 0">selected</if> >否</option><option value="1" <if condition="$vo.is_return eq 1">selected</if> >是</option></select></td>
                     </tr>
+                    </volist>
                 </table>
             </div>
 
@@ -59,29 +61,31 @@
                         <td>4A集团代理服务费比例</td>
                         <td>4A集团代理服务费</td>
                     </tr>
+                    <volist name="expect" id="vo">
                     <tr>
-                        <td class="input-td"><input type="text" name="expect_date[]" value="" class="input-text"><input type="hidden" name="id[]" value=""></td>
-                        <td class="input-td"><input type="text" name="expect_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="receipt_date[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="receipt_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><select name="receipt_type[]" class="input-select"><option value="1">现金</option><option value="2">冲抵</option></select></td>
+                        <td class="input-td"><input type="text" name="expect_date[]" value="{$vo.expect_date}" class="input-text"><input type="hidden" name="id[]" value=""></td>
+                        <td class="input-td"><input type="text" name="expect_amount[]" value="{$vo.expect_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt_date[]" value="{$vo.receipt_date}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt_amount[]" value="{$vo.receipt_amount}" class="input-text"></td>
+                        <td class="input-td"><select name="receipt_type[]" class="input-select"><option value="1" <if condition="$vo.receipt_type eq 1">selected</if>>现金</option><option value="2" <if condition="$vo.receipt_type eq 2">selected</if>>冲抵</option></select></td>
                         <td class="input-td"><input type="text" name="contract_no[]" value="" class="input-text"></td>
-                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td>
-                        <td class="input-td"><input type="text" name="local_new[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_new_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_fund[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_fund_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_special[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_special_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_base[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_base_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fund[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fund_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_special[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_special_amount[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fee[]" value="" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fee_amount[]" value="" class="input-text"></td>
+                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0" <if condition="$vo.is_return eq 0">selected</if>>否</option><option value="1" <if condition="$vo.is_return eq 1">selected</if>>是</option></select></td>
+                        <td class="input-td"><input type="text" name="local_new[]" value="{$vo.local_new}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_new_amount[]" value="{$vo.local_new_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_fund[]" value="{$vo.local_fund}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_fund_amount[]" value="{$vo.local_fund_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_special[]" value="{$vo.local_special}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="local_special_amount[]" value="{$vo.local_special_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_base[]" value="{$vo.agency_base}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_base_amount[]" value="{$vo.agency_base_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fund[]" value="{$vo.agency_fund}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fund_amount[]" value="{$vo.agency_fund_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_special[]" value="{$vo.agency_special}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_special_amount[]" value="{$vo.agency_special_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fee[]" value="{$vo.agency_fee}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="agency_fee_amount[]" value="{$vo.agency_fee_amount}" class="input-text"></td>
                     </tr>
+                    </volist>
                 </table>
             </div>
             <div class="layui-form-item" style="text-align: center">
