@@ -14,7 +14,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">合同编号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="contract_no" autocomplete="off" placeholder="流程合同编号" class="layui-input">
+                                <input type="text" name="contract_no" autocomplete="off" placeholder="流程合同编号" class="layui-input" value="{:isset($param.contract_no)?$param.contract_no:''}">
                             </div>
                         </div>
                     </td>
@@ -22,7 +22,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">ERP合同号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="erp_contract_no" autocomplete="off" placeholder="ERP合同号" class="layui-input">
+                                <input type="text" name="erp_contract_no" autocomplete="off" placeholder="ERP合同号" class="layui-input" value="{:isset($param.erp_contract_no)?$param.erp_contract_no:''}">
                             </div>
                         </div>
                     </td>
@@ -30,7 +30,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">客户单位</label>
                             <div class="layui-input-block">
-                                <input type="text" name="customer" autocomplete="off" placeholder="客户单位" class="layui-input">
+                                <input type="text" name="customer" autocomplete="off" placeholder="客户单位" class="layui-input" value="{:isset($param.customer)?$param.customer:''}">
                             </div>
                         </div>
                     </td>
@@ -38,7 +38,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">4A代理公司</label>
                             <div class="layui-input-block">
-                                <input type="text" name="agency" autocomplete="off" placeholder="4A代理公司" class="layui-input">
+                                <input type="text" name="agency" autocomplete="off" placeholder="4A代理公司" class="layui-input" value="{:isset($param.agency)?$param.agency:''}">
                             </div>
                         </div>
                     </td>
@@ -48,7 +48,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">品牌</label>
                             <div class="layui-input-block">
-                                <input type="text" name="brand" autocomplete="off" placeholder="品牌" class="layui-input">
+                                <input type="text" name="brand" autocomplete="off" placeholder="品牌" class="layui-input" value="{:isset($param.brand)?$param.brand:''}">
                             </div>
                         </div>
                     </td>
@@ -56,7 +56,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">直客组</label>
                             <div class="layui-input-block">
-                                <input type="text" name="direct_group" autocomplete="off" placeholder="直客组" class="layui-input">
+                                <input type="text" name="direct_group" autocomplete="off" placeholder="直客组" class="layui-input" value="{:isset($param.direct_group)?$param.direct_group:''}">
                             </div>
                         </div>
                     </td>
@@ -64,7 +64,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">直客经理</label>
                             <div class="layui-input-block">
-                                <input type="text" name="direct_manager" autocomplete="off" placeholder="直客经理" class="layui-input">
+                                <input type="text" name="direct_manager" autocomplete="off" placeholder="直客经理" class="layui-input" value="{:isset($param.direct_manager)?$param.direct_manager:''}">
                             </div>
                         </div>
                     </td>
@@ -72,7 +72,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">广告类型</label>
                             <div class="layui-input-block">
-                                <input type="text" name="ad_type" autocomplete="off" placeholder="4A代理公司" class="layui-input">
+                                <input type="text" name="ad_type" autocomplete="off" placeholder="4A代理公司" class="layui-input" value="{:isset($param.ad_type)?$param.ad_type:''}">
                             </div>
                         </div>
                     </td>
@@ -82,7 +82,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">渠道组</label>
                             <div class="layui-input-block">
-                                <input type="text" name="channel" autocomplete="off" placeholder="渠道组" class="layui-input">
+                                <input type="text" name="channel" autocomplete="off" placeholder="渠道组" class="layui-input" value="{:isset($param.channel)?$param.channel:''}">
                             </div>
                         </div>
                     </td>
@@ -90,7 +90,7 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">渠道经理</label>
                             <div class="layui-input-block">
-                                <input type="text" name="channel_manager" autocomplete="off" placeholder="渠道经理" class="layui-input">
+                                <input type="text" name="channel_manager" autocomplete="off" placeholder="渠道经理" class="layui-input" value="{:isset($param.channel_manager)?$param.channel_manager:''}">
                             </div>
                         </div>
                     </td>
@@ -99,11 +99,11 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">日期区间</label>
                                 <div class="layui-input-inline" style="width: 130px;">
-                                    <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                    <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" value="{:isset($param.start_time)?$param.start_time:''}">
                                 </div>
                                 <div class="layui-form-mid">-</div>
                                 <div class="layui-input-inline" style="width: 130px;">
-                                    <input type="text" id="end_time" name="end_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                    <input type="text" id="end_time" name="end_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" value="{:isset($param.end_time)?$param.end_time:''}">
                                 </div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
         </form>
     </div>
 
-    <table class="layui-table" lay-data="{url:'{:url("ajaxExpect")}', page:true, id:'data_table'}" lay-filter="data_table">
+    <table class="layui-table" lay-data="{url:'{:url("ajaxExpect",$param)}', page:true, id:'data_table'}" lay-filter="data_table">
         <thead>
         <tr>
             <th lay-data="{field:'id', width:80, sort: true}">序号</th>

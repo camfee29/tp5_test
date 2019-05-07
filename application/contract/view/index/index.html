@@ -194,10 +194,10 @@
                 location.href="{:url('add')}?id="+data.contract_id;
                 //layer.alert('编辑行：<br>'+ JSON.stringify(data))
             } else if(obj.event === 'expect'){ // 应收
-                location.href="{:url('expect_receipt')}?id="+data.contract_id;
+                location.href="{:url('expect_receipt')}?contract_id="+data.contract_id;
                 //layer.alert('应收：<br>'+ JSON.stringify(data))
             } else if(obj.event === 'receipt'){  // 到账
-                location.href="{:url('expect_receipt')}?id="+data.contract_id;
+                location.href="{:url('expect_receipt')}?contract_id="+data.contract_id;
                 //layer.alert('到账：<br>'+ JSON.stringify(data))
             } else if(obj.event === 'duty'){ // 权责
                 layer.alert('权责：<br>'+ JSON.stringify(data))

@@ -6,9 +6,9 @@
     <div class="title-center">
         <h2>合同应收到账信息</h2>
     </div>
-    <div class="form-container">
+    <div class="form-container" id="form-container">
         <form class="layui-form" method="post" action="{:url('expect_receipt')}">
-            <input type="hidden" name="contract_id" value="">
+            <input type="hidden" name="contract_id" value="{$contract_id}">
             <div class="div">
                 <div>
                     <a href="javascript:void(0)" class="layui-btn" id="add_tpl_expect">增行</a>
@@ -23,9 +23,9 @@
                     </tr>
                     <volist name="expect" id="vo">
                     <tr>
-                        <td class="input-td"><input type="text" name="expect_date[]" value="{$vo.expect_date}" class="input-text"><input type="hidden" name="id[]" value="{$vo.id}"></td>
-                        <td class="input-td"><input type="text" name="expect_amount[]" value="{$vo.expect_amount}" class="input-text"></td>
-                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0" <if condition="$vo.is_return eq 0">selected</if> >否</option><option value="1" <if condition="$vo.is_return eq 1">selected</if> >是</option></select></td>
+                        <td class="input-td"><input type="text" name="expect[expect_date][]" value="{$vo.expect_date}" class="input-text date-select"><input type="hidden" name="expect[id][]" value="{$vo.id}"></td>
+                        <td class="input-td"><input type="text" name="expect[expect_amount][]" value="{$vo.expect_amount}" class="input-text"></td>
+                        <td class="input-td"><select name="expect[is_return][]" class="input-select"><option value="0" <if condition="$vo.is_return eq 0">selected</if> >否</option><option value="1" <if condition="$vo.is_return eq 1">selected</if> >是</option></select></td>
                     </tr>
                     </volist>
                 </table>
@@ -61,36 +61,36 @@
                         <td>4A集团代理服务费比例</td>
                         <td>4A集团代理服务费</td>
                     </tr>
-                    <volist name="expect" id="vo">
+                    <volist name="receipt" id="vo">
                     <tr>
-                        <td class="input-td"><input type="text" name="expect_date[]" value="{$vo.expect_date}" class="input-text"><input type="hidden" name="id[]" value=""></td>
-                        <td class="input-td"><input type="text" name="expect_amount[]" value="{$vo.expect_amount}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="receipt_date[]" value="{$vo.receipt_date}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="receipt_amount[]" value="{$vo.receipt_amount}" class="input-text"></td>
-                        <td class="input-td"><select name="receipt_type[]" class="input-select"><option value="1" <if condition="$vo.receipt_type eq 1">selected</if>>现金</option><option value="2" <if condition="$vo.receipt_type eq 2">selected</if>>冲抵</option></select></td>
-                        <td class="input-td"><input type="text" name="contract_no[]" value="" class="input-text"></td>
-                        <td class="input-td"><select name="is_return[]" class="input-select"><option value="0" <if condition="$vo.is_return eq 0">selected</if>>否</option><option value="1" <if condition="$vo.is_return eq 1">selected</if>>是</option></select></td>
-                        <td class="input-td"><input type="text" name="local_new[]" value="{$vo.local_new}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_new_amount[]" value="{$vo.local_new_amount}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_fund[]" value="{$vo.local_fund}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_fund_amount[]" value="{$vo.local_fund_amount}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_special[]" value="{$vo.local_special}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="local_special_amount[]" value="{$vo.local_special_amount}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_base[]" value="{$vo.agency_base}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_base_amount[]" value="{$vo.agency_base_amount}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fund[]" value="{$vo.agency_fund}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fund_amount[]" value="{$vo.agency_fund_amount}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_special[]" value="{$vo.agency_special}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_special_amount[]" value="{$vo.agency_special_amount}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fee[]" value="{$vo.agency_fee}" class="input-text"></td>
-                        <td class="input-td"><input type="text" name="agency_fee_amount[]" value="{$vo.agency_fee_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[expect_date][]" value="{$vo.expect_date}" class="input-text date-select"><input type="hidden" name="receipt[id][]" value="{$vo.id}"></td>
+                        <td class="input-td"><input type="text" name="receipt[expect_amount][]" value="{$vo.expect_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[receipt_date][]" value="{$vo.receipt_date}" class="input-text date-select"></td>
+                        <td class="input-td"><input type="text" name="receipt[receipt_amount][]" value="{$vo.receipt_amount}" class="input-text"></td>
+                        <td class="input-td"><select name="receipt[receipt_type][]" class="input-select"><option value="1" <if condition="$vo.receipt_type eq 1">selected</if>>现金</option><option value="2" <if condition="$vo.receipt_type eq 2">selected</if>>冲抵</option></select></td>
+                        <td class="input-td"><input type="text" name="receipt[contract_no][]" value="{$vo.contract_no}" class="input-text"></td>
+                        <td class="input-td"><select name="receipt[is_return][]" class="input-select"><option value="0" <if condition="$vo.is_return eq 0">selected</if>>否</option><option value="1" <if condition="$vo.is_return eq 1">selected</if>>是</option></select></td>
+                        <td class="input-td"><input type="text" name="receipt[local_new][]" value="{$vo.local_new}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[local_new_amount][]" value="{$vo.local_new_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[local_fund][]" value="{$vo.local_fund}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[local_fund_amount][]" value="{$vo.local_fund_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[local_special][]" value="{$vo.local_special}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[local_special_amount][]" value="{$vo.local_special_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_base][]" value="{$vo.agency_base}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_base_amount][]" value="{$vo.agency_base_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_fund][]" value="{$vo.agency_fund}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_fund_amount][]" value="{$vo.agency_fund_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_special][]" value="{$vo.agency_special}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_special_amount][]" value="{$vo.agency_special_amount}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_fee][]" value="{$vo.agency_fee}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="receipt[agency_fee_amount][]" value="{$vo.agency_fee_amount}" class="input-text"></td>
                     </tr>
                     </volist>
                 </table>
             </div>
             <div class="layui-form-item" style="text-align: center">
                 <button class="layui-btn" lay-submit="" lay-filter="submit">提交</button>
-                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="return">返回</button>
+                <a href="javascript:history.back();" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="return">返回</a>
             </div>
         </form>
     </div>
@@ -115,6 +115,12 @@
         laydate.render({
             elem: '#end_time',
             trigger: 'click',
+        });
+        $(".date-select").each(function () {
+            laydate.render({
+                elem: this, //指定元素
+                trigger: 'click',
+            });
         });
         //创建一个编辑器
         var editIndex = layedit.build('LAY_demo_editor');
@@ -141,9 +147,15 @@
             return false;
         });
         $('#add_tpl_expect').on('click',function () {
-            var tpl = '<tr><td class="input-td"><input type="text" name="expect_date[]" value="" class="input-text"><input type="hidden" name="id[]"></td><td class="input-td"><input type="text" name="amount[]" value="" class="input-text"></td><td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td></tr>';
+            var tpl = '<tr><td class="input-td"><input type="text" name="expect[expect_date][]" value="" class="input-text date-select"><input type="hidden" name="expect[id][]"></td><td class="input-td"><input type="text" name="expect[expect_amount][]" value="" class="input-text"></td><td class="input-td"><select name="expect[is_return][]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td></tr>';
             $('#table-expect').append(tpl);
             form.render();
+            $(".date-select").each(function () {
+                laydate.render({
+                    elem: this, //指定元素
+                    trigger: 'click',
+                });
+            });
         });
         $('#del_tpl_expect').on('click',function () {
             if ($('#table-expect tr').size() > 1) {
@@ -153,9 +165,15 @@
             }
         });
         $('#add_tpl_receipt').on('click',function () {
-            var tpl = '<tr><td class="input-td"><input type="text" name="expect_date[]" class="input-text"><input type="hidden" name="id[]"></td><td class="input-td"><input type="text" name="expect_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="receipt_date[]"  class="input-text"></td><td class="input-td"><input type="text" name="receipt_amount[]" class="input-text"></td><td class="input-td"><select name="receipt_type[]" class="input-select"><option value="1">现金</option><option value="2">冲抵</option></select></td><td class="input-td"><input type="text" name="contract_no[]" class="input-text"></td><td class="input-td"><select name="is_return[]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td><td class="input-td"><input type="text" name="local_new[]" class="input-text"></td><td class="input-td"><input type="text" name="local_new_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="local_fund[]" class="input-text"></td><td class="input-td"><input type="text" name="local_fund_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="local_special[]" class="input-text"></td><td class="input-td"><input type="text" name="local_special_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_base[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_base_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fund[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fund_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_special[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_special_amount[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fee[]" class="input-text"></td><td class="input-td"><input type="text" name="agency_fee_amount[]" class="input-text"></td></tr>';
+            var tpl = '<tr><td class="input-td"><input type="text" name="receipt[expect_date][]" class="input-text date-select"><input type="hidden" name="receipt[id][]"></td><td class="input-td"><input type="text" name="receipt[expect_amount][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[receipt_date][]"  class="input-text date-select"></td><td class="input-td"><input type="text" name="receipt[receipt_amount][]" class="input-text"></td><td class="input-td"><select name="receipt[receipt_type][]" class="input-select"><option value="1">现金</option><option value="2">冲抵</option></select></td><td class="input-td"><input type="text" name="receipt[contract_no][]" class="input-text"></td><td class="input-td"><select name="receipt[is_return][]" class="input-select"><option value="0">否</option><option value="1">是</option></select></td><td class="input-td"><input type="text" name="receipt[local_new][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[local_new_amount][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[local_fund][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[local_fund_amount][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[local_special][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[local_special_amount][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_base][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_base_amount][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_fund][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_fund_amount][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_special][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_special_amount][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_fee][]" class="input-text"></td><td class="input-td"><input type="text" name="receipt[agency_fee_amount][]" class="input-text"></td></tr>';
             $('#table-receipt').append(tpl);
             form.render();
+            $(".date-select").each(function () {
+                laydate.render({
+                    elem: this, //指定元素
+                    trigger: 'click',
+                });
+            });
         });
         $('#del_tpl_receipt').on('click',function () {
             if ($('#table-receipt tr').size() > 1) {

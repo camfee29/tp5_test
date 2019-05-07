@@ -7,6 +7,11 @@ use think\Db;
 
 class Index extends Controller
 {
+    private $receipt_type = [
+        1 => '现金 ',
+        2 => '冲抵'
+    ];
+
     public function index()
     {
         $param = $_GET;
@@ -22,55 +27,56 @@ class Index extends Controller
         $where = [];
         $contract_no = input('contract_no');
         if (!empty($contract_no)) {
-            $where['contract_no'] = $contract_no;
+            $where['c.contract_no'] = $contract_no;
         }
         $erp_contract_no = input('erp_contract_no');
         if (!empty($erp_contract_no)) {
-            $where['erp_contract_no'] = $erp_contract_no;
+            $where['c.erp_contract_no'] = $erp_contract_no;
         }
         $customer = input('customer');
         if (!empty($customer)) {
-            $where['customer'] = $customer;
+            $where['c.customer'] = $customer;
         }
         $agency = input('agency');
         if (!empty($agency)) {
-            $where['agency'] = $agency;
+            $where['c.agency'] = $agency;
         }
         $brand = input('brand');
         if (!empty($brand)) {
-            $where['brand'] = $brand;
+            $where['c.brand'] = $brand;
         }
         $direct_group = input('direct_group');
         if (!empty($direct_group)) {
-            $where['direct_group'] = $direct_group;
+            $where['d.direct_group'] = $direct_group;
         }
         $direct_manager = input('direct_manager');
         if (!empty($direct_manager)) {
-            $where['direct_manager'] = $direct_manager;
+            $where['d.direct_manager'] = $direct_manager;
         }
         $ad_type = input('ad_type');
         if (!empty($ad_type)) {
-            $where['ad_type'] = $ad_type;
+            $where['c.ad_type'] = $ad_type;
         }
         $channel = input('channel');
         if (!empty($channel)) {
-            $where['channel'] = $channel;
+            $where['c.channel'] = $channel;
         }
         $channel_manager = input('channel_manager');
         if (!empty($channel_manager)) {
-            $where['channel_manager'] = $channel_manager;
+            $where['c.channel_manager'] = $channel_manager;
         }
         $start_time = input('start_time');
-        if (!empty($start_time)) {
-            $where['launch_time'][] = ['>=', strtotime($start_time)];
-        }
         $end_time = input('end_time');
-        if (!empty($end_time)) {
-            $where['launch_time'][] = ['<=', strtotime($end_time)];
+        if (!empty($start_time) && !empty($end_time)) {
+            $where['c.launch_time'] = [['>=', strtotime($start_time)], ['<=', strtotime($end_time)]];
+        } elseif (!empty($start_time)) {
+            $where['c.launch_time'] = ['>=', strtotime($start_time)];
+        } elseif (!empty($end_time)) {
+            $where['c.launch_time'] = ['<=', strtotime($end_time)];
         }
-        $count = Db::name('contract')->where($where)->count();
+        $count = Db::name('contract')->alias('c')->where($where)->count();
         $offset = ($page - 1) * $limit;
-        $data = Db::name('contract')->where($where)->limit($offset, $limit)->select();
+        $data = Db::name('contract')->alias('c')->where($where)->limit($offset, $limit)->select();
         if (!empty($data)) {
             foreach ($data as $k => $v) {
                 $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
@@ -128,7 +134,6 @@ class Index extends Controller
             foreach ($ids as $k => $id) {
                 if (!empty($id)) {
                     $direct_update[$id] = [
-                        'contract_id' => $cid,
                         'direct_group' => trim($direct_group[$k]),
                         'direct_manager' => trim($direct_manager[$k]),
                         'rate' => (float)$rate[$k],
@@ -145,11 +150,15 @@ class Index extends Controller
                 }
             }
         }
+        $not_del = [];
         if (!empty($direct_update)) {
             foreach ($direct_update as $id => $val) {
+                $not_del[$id] = $id;
                 Db::name('contract_direct')->where('id', $id)->update($val);
             }
         }
+        // 删除 必须在新增之前
+        Db::name('contract_direct')->where(['contract_id' => $cid, 'id' => ['not in', $not_del]])->delete();
         if (!empty($direct_add)) {
             Db::name('contract_direct')->insertAll($direct_add);
         }
@@ -169,12 +178,122 @@ class Index extends Controller
     {
         $contract_id = input('contract_id', 0, 'intval');
         if (!empty($_POST)) {
-            dump($_POST);
-            die;
+            if (!empty($_POST['expect'])) {
+                $da = $_POST['expect'];
+                $expect_add = $expect_update = [];
+                foreach ($da['id'] as $k => $v) {
+                    if (empty($v)) {
+                        $expect_add[] = [
+                            'contract_id' => $contract_id,
+                            'expect_date' => trim($da['expect_date'][$k]),
+                            'expect_amount' => floatval($da['expect_amount'][$k]),
+                            'is_return' => intval($da['is_return'][$k]),
+                            'add_time' => time(),
+                        ];
+                    } else {
+                        $expect_update[$v] = [
+                            'expect_date' => trim($da['expect_date'][$k]),
+                            'expect_amount' => floatval($da['expect_amount'][$k]),
+                            'is_return' => intval($da['is_return'][$k]),
+                            'update_time' => time(),
+                        ];
+                    }
+                }
+                $not_del = [];
+                if (!empty($expect_update)) {
+                    foreach ($expect_update as $id => $val) {
+                        $not_del[$id] = $id;
+                        Db::name('contract_expect')->where('id', $id)->update($val);
+                    }
+                }
+                // 删除 必须在新增之前
+                Db::name('contract_expect')->where([
+                    'contract_id' => $contract_id,
+                    'id' => ['not in', $not_del]
+                ])->delete();
+                if (!empty($expect_add)) {
+                    Db::name('contract_expect')->insertAll($expect_add);
+                }
+            }
+            if (!empty($_POST['receipt'])) {
+                $da = $_POST['receipt'];
+                $receipt_add = $receipt_update = [];
+                foreach ($da['id'] as $k => $v) {
+                    if (empty($v)) {
+                        $receipt_add[] = [
+                            'contract_id' => $contract_id,
+                            'expect_date' => trim($da['expect_date'][$k]),
+                            'expect_amount' => floatval($da['expect_amount'][$k]),
+                            'receipt_date' => trim($da['receipt_date'][$k]),
+                            'receipt_amount' => floatval($da['receipt_amount'][$k]),
+                            'receipt_type' => intval($da['receipt_type'][$k]),
+                            'contract_no' => trim($da['contract_no'][$k]),
+                            'is_return' => intval($da['is_return'][$k]),
+                            'local_new' => trim($da['local_new'][$k]),
+                            'local_new_amount' => floatval($da['local_new_amount'][$k]),
+                            'local_fund' => floatval($da['local_fund'][$k]),
+                            'local_fund_amount' => floatval($da['local_fund_amount'][$k]),
+                            'local_special' => floatval($da['local_special'][$k]),
+                            'local_special_amount' => floatval($da['local_special_amount'][$k]),
+                            'agency_base' => floatval($da['agency_base'][$k]),
+                            'agency_base_amount' => floatval($da['agency_base_amount'][$k]),
+                            'agency_fund' => floatval($da['agency_fund'][$k]),
+                            'agency_fund_amount' => floatval($da['agency_fund_amount'][$k]),
+                            'agency_special' => floatval($da['agency_special'][$k]),
+                            'agency_special_amount' => floatval($da['agency_special_amount'][$k]),
+                            'agency_fee' => floatval($da['agency_fee'][$k]),
+                            'agency_fee_amount' => floatval($da['agency_fee_amount'][$k]),
+                            'add_time' => time(),
+                        ];
+                    } else {
+                        $receipt_update[$v] = [
+                            'expect_date' => trim($da['expect_date'][$k]),
+                            'expect_amount' => floatval($da['expect_amount'][$k]),
+                            'receipt_date' => trim($da['receipt_date'][$k]),
+                            'receipt_amount' => floatval($da['receipt_amount'][$k]),
+                            'receipt_type' => intval($da['receipt_type'][$k]),
+                            'contract_no' => trim($da['contract_no'][$k]),
+                            'is_return' => intval($da['is_return'][$k]),
+                            'local_new' => trim($da['local_new'][$k]),
+                            'local_new_amount' => floatval($da['local_new_amount'][$k]),
+                            'local_fund' => floatval($da['local_fund'][$k]),
+                            'local_fund_amount' => floatval($da['local_fund_amount'][$k]),
+                            'local_special' => floatval($da['local_special'][$k]),
+                            'local_special_amount' => floatval($da['local_special_amount'][$k]),
+                            'agency_base' => floatval($da['agency_base'][$k]),
+                            'agency_base_amount' => floatval($da['agency_base_amount'][$k]),
+                            'agency_fund' => floatval($da['agency_fund'][$k]),
+                            'agency_fund_amount' => floatval($da['agency_fund_amount'][$k]),
+                            'agency_special' => floatval($da['agency_special'][$k]),
+                            'agency_special_amount' => floatval($da['agency_special_amount'][$k]),
+                            'agency_fee' => floatval($da['agency_fee'][$k]),
+                            'agency_fee_amount' => floatval($da['agency_fee_amount'][$k]),
+                            'update_time' => time(),
+                        ];
+                    }
+                }
+                $not_del = [];
+                if (!empty($receipt_update)) {
+                    foreach ($receipt_update as $id => $val) {
+                        $not_del[$id] = $id;
+                        Db::name('contract_receipt')->where('id', $id)->update($val);
+                    }
+                }
+                // 删除 必须在新增之前
+                Db::name('contract_receipt')->where([
+                    'contract_id' => $contract_id,
+                    'id' => ['not in', $not_del]
+                ])->delete();
+                if (!empty($receipt_add)) {
+                    Db::name('contract_receipt')->insertAll($receipt_add);
+                }
+            }
+            $this->success('操作成功');
         }
         $expect = Db::name('contract_expect')->where('contract_id', $contract_id)->select();
         $receipt = Db::name('contract_receipt')->where('contract_id', $contract_id)->select();
 
+        $this->assign('contract_id', $contract_id);
         $this->assign('expect', $expect);
         $this->assign('receipt', $receipt);
 
@@ -188,6 +307,9 @@ class Index extends Controller
      */
     public function stat()
     {
+        $param = $_GET;
+        $this->assign('param', $param);
+
         return $this->fetch();
     }
 
@@ -198,6 +320,9 @@ class Index extends Controller
      */
     public function expect()
     {
+        $param = $_GET;
+        $this->assign('param', $param);
+
         return $this->fetch();
     }
 
@@ -205,36 +330,67 @@ class Index extends Controller
     {
         $page = input('page', 1);
         $limit = input('limit', 10);
-        for ($i = 0; $i < 10; $i++) {
-
-            $data[] = [
-                'expect_date' => date('Y-m-d'),
-                'expect_amount' => '500000',
-                'id' => ($page - 1) * $limit + $i,
-                'launch_time' => 'xxxxx',
-                'contract_no' => 'xxxxx',
-                'erp_contract_no' => 'xxxxx',
-                'customer' => 'xxxxx',
-                'final_customer' => 'xxxxx',
-                'agency' => 'xxxxx',
-                'agency_type' => 'xxxxx',
-                'mian_brand' => 'xxxxx',
-                'brand' => 'xxxxx',
-                'brand_type' => 'xxxxx',
-                'channel' => 'xxxxx',
-                'channel_manager' => 'xxxxx',
-                'start_time' => 'xxxxx',
-                'end_time' => 'xxxxx',
-                'price' => 'xxxxx',
-                'put_volume' => 'xxxxx',
-                'amount' => 'xxxxx',
-                'final_amount' => 'xxxxx',
-                'balance_amount' => 'xxxxx',
-                'balance' => 'xxxxx',
-                'ad_type' => 'xxxxx',
-            ];
+        $where = [];
+        $contract_no = input('contract_no');
+        if (!empty($contract_no)) {
+            $where['c.contract_no'] = $contract_no;
         }
-        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data], JSON_UNESCAPED_UNICODE));
+        $erp_contract_no = input('erp_contract_no');
+        if (!empty($erp_contract_no)) {
+            $where['c.erp_contract_no'] = $erp_contract_no;
+        }
+        $customer = input('customer');
+        if (!empty($customer)) {
+            $where['c.customer'] = $customer;
+        }
+        $agency = input('agency');
+        if (!empty($agency)) {
+            $where['c.agency'] = $agency;
+        }
+        $brand = input('brand');
+        if (!empty($brand)) {
+            $where['c.brand'] = $brand;
+        }
+        $direct_group = input('direct_group');
+        if (!empty($direct_group)) {
+            $where['d.direct_group'] = $direct_group;
+        }
+        $direct_manager = input('direct_manager');
+        if (!empty($direct_manager)) {
+            $where['d.direct_manager'] = $direct_manager;
+        }
+        $ad_type = input('ad_type');
+        if (!empty($ad_type)) {
+            $where['c.ad_type'] = $ad_type;
+        }
+        $channel = input('channel');
+        if (!empty($channel)) {
+            $where['c.channel'] = $channel;
+        }
+        $channel_manager = input('channel_manager');
+        if (!empty($channel_manager)) {
+            $where['c.channel_manager'] = $channel_manager;
+        }
+        $start_time = input('start_time');
+        $end_time = input('end_time');
+        if (!empty($start_time) && !empty($end_time)) {
+            $where['c.launch_time'] = [['>=', strtotime($start_time)], ['<=', strtotime($end_time)]];
+        } elseif (!empty($start_time)) {
+            $where['c.launch_time'] = ['>=', strtotime($start_time)];
+        } elseif (!empty($end_time)) {
+            $where['c.launch_time'] = ['<=', strtotime($end_time)];
+        }
+        $count = Db::name('contract_expect')->alias('ce')->join('contract c', 'ce.contract_id=c.contract_id')->where($where)->count();
+        $offset = ($page - 1) * $limit;
+        $data = Db::name('contract_expect')->alias('ce')->join('contract c', 'ce.contract_id=c.contract_id')->where($where)->limit($offset, $limit)->select();
+        if (!empty($data)) {
+            foreach ($data as $k => $v) {
+                $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
+                $data[$k]['start_time'] = date('Y-m-d', $v['start_time']);
+                $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
+            }
+        }
+        exit(json_encode(['code' => 0, 'count' => $count, 'data' => $data]));
     }
 
     /**
@@ -244,6 +400,9 @@ class Index extends Controller
      */
     public function receipt()
     {
+        $param = $_GET;
+        $this->assign('param', $param);
+
         return $this->fetch();
     }
 
@@ -251,40 +410,68 @@ class Index extends Controller
     {
         $page = input('page', 1);
         $limit = input('limit', 10);
-        for ($i = 0; $i < 10; $i++) {
-
-            $data[] = [
-                'receipt_date' => date('Y-m-d'),
-                'receipt_amount' => '500000',
-                'receipt_type' => '现金',
-                'ex_contract_no' => '',
-                'expect_date' => date('Y-m-d'),
-                'expect_amount' => '500000',
-                'id' => ($page - 1) * $limit + $i,
-                'launch_time' => 'xxxxx',
-                'contract_no' => 'xxxxx',
-                'erp_contract_no' => 'xxxxx',
-                'customer' => 'xxxxx',
-                'final_customer' => 'xxxxx',
-                'agency' => 'xxxxx',
-                'agency_type' => 'xxxxx',
-                'mian_brand' => 'xxxxx',
-                'brand' => 'xxxxx',
-                'brand_type' => 'xxxxx',
-                'channel' => 'xxxxx',
-                'channel_manager' => 'xxxxx',
-                'start_time' => 'xxxxx',
-                'end_time' => 'xxxxx',
-                'price' => 'xxxxx',
-                'put_volume' => 'xxxxx',
-                'amount' => 'xxxxx',
-                'final_amount' => 'xxxxx',
-                'balance_amount' => 'xxxxx',
-                'balance' => 'xxxxx',
-                'ad_type' => 'xxxxx',
-            ];
+        $where = [];
+        $contract_no = input('contract_no');
+        if (!empty($contract_no)) {
+            $where['c.contract_no'] = $contract_no;
         }
-        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data], JSON_UNESCAPED_UNICODE));
+        $erp_contract_no = input('erp_contract_no');
+        if (!empty($erp_contract_no)) {
+            $where['c.erp_contract_no'] = $erp_contract_no;
+        }
+        $customer = input('customer');
+        if (!empty($customer)) {
+            $where['c.customer'] = $customer;
+        }
+        $agency = input('agency');
+        if (!empty($agency)) {
+            $where['c.agency'] = $agency;
+        }
+        $brand = input('brand');
+        if (!empty($brand)) {
+            $where['c.brand'] = $brand;
+        }
+        $direct_group = input('direct_group');
+        if (!empty($direct_group)) {
+            $where['d.direct_group'] = $direct_group;
+        }
+        $direct_manager = input('direct_manager');
+        if (!empty($direct_manager)) {
+            $where['d.direct_manager'] = $direct_manager;
+        }
+        $ad_type = input('ad_type');
+        if (!empty($ad_type)) {
+            $where['c.ad_type'] = $ad_type;
+        }
+        $channel = input('channel');
+        if (!empty($channel)) {
+            $where['c.channel'] = $channel;
+        }
+        $channel_manager = input('channel_manager');
+        if (!empty($channel_manager)) {
+            $where['c.channel_manager'] = $channel_manager;
+        }
+        $start_time = input('start_time');
+        $end_time = input('end_time');
+        if (!empty($start_time) && !empty($end_time)) {
+            $where['c.launch_time'] = [['>=', strtotime($start_time)], ['<=', strtotime($end_time)]];
+        } elseif (!empty($start_time)) {
+            $where['c.launch_time'] = ['>=', strtotime($start_time)];
+        } elseif (!empty($end_time)) {
+            $where['c.launch_time'] = ['<=', strtotime($end_time)];
+        }
+        $count = Db::name('contract_receipt')->alias('cr')->join('contract c', 'cr.contract_id=c.contract_id')->where($where)->count();
+        $offset = ($page - 1) * $limit;
+        $data = Db::name('contract_receipt')->alias('cr')->join('contract c', 'cr.contract_id=c.contract_id')->field('cr.*,cr.contract_no as ex_contract_no,c.*')->where($where)->limit($offset, $limit)->select();
+        if (!empty($data)) {
+            foreach ($data as $k => $v) {
+                $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
+                $data[$k]['start_time'] = date('Y-m-d', $v['start_time']);
+                $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
+                $data[$k]['receipt_type'] = $this->receipt_type[$v['receipt_type']];
+            }
+        }
+        exit(json_encode(['code' => 0, 'count' => $count, 'data' => $data]));
     }
 
     /**
@@ -294,6 +481,9 @@ class Index extends Controller
      */
     public function overdue()
     {
+        $param = $_GET;
+        $this->assign('param', $param);
+
         return $this->fetch();
     }
 
@@ -331,7 +521,7 @@ class Index extends Controller
                 'ad_type' => 'xxxxx',
             ];
         }
-        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data], JSON_UNESCAPED_UNICODE));
+        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data]));
     }
 
     /**
@@ -341,6 +531,9 @@ class Index extends Controller
      */
     public function balance()
     {
+        $param = $_GET;
+        $this->assign('param', $param);
+
         return $this->fetch();
     }
 
@@ -375,7 +568,7 @@ class Index extends Controller
                 'ad_type' => 'xxxxx',
             ];
         }
-        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data], JSON_UNESCAPED_UNICODE));
+        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data]));
     }
 
     /**
@@ -385,6 +578,9 @@ class Index extends Controller
      */
     public function agency_fee()
     {
+        $param = $_GET;
+        $this->assign('param', $param);
+
         return $this->fetch();
     }
 
@@ -418,7 +614,7 @@ class Index extends Controller
                 'ad_type' => 'xxxxx',
             ];
         }
-        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data], JSON_UNESCAPED_UNICODE));
+        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data]));
     }
 
     /**
