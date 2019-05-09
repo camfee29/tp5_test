@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-04-29 18:22:25
+Date: 2019-05-09 10:40:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -57,7 +57,7 @@ CREATE TABLE `contract` (
   `remark` text NOT NULL COMMENT '备注',
   `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
-  `receipt_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '到款总计',
+  `total_receipt_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '到款总计',
   `mortgage_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '冲抵金额 结算余额冲抵其他合同总额',
   `charge_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '充抵金额 其他合同余额冲抵总额',
   `overdue_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '逾期金额',
@@ -67,11 +67,7 @@ CREATE TABLE `contract` (
   PRIMARY KEY (`contract_id`),
   KEY `idx_flow_id` (`flow_id`) USING BTREE,
   KEY `idx_contract_no` (`contract_no`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同基本信息表';
-
--- ----------------------------
--- Records of contract
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='合同基本信息表';
 
 -- ----------------------------
 -- Table structure for contract_direct
@@ -84,13 +80,10 @@ CREATE TABLE `contract_direct` (
   `direct_manager` varchar(50) NOT NULL DEFAULT '' COMMENT '直客经理',
   `rate` decimal(4,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '拆分比例',
   `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '新增时间',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_contract_id` (`contract_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同直客信息表';
-
--- ----------------------------
--- Records of contract_direct
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='合同直客信息表';
 
 -- ----------------------------
 -- Table structure for contract_expect
@@ -100,17 +93,13 @@ CREATE TABLE `contract_expect` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `contract_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同id',
   `expect_date` date NOT NULL COMMENT '应收日期',
-  `amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '应收金额',
-  `is_returrn` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否已返点 0：否 1：是',
+  `expect_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '应收金额',
+  `is_return` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否已返点 0：否 1：是',
   `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `idx_contract_id_date` (`contract_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同应收信息表';
-
--- ----------------------------
--- Records of contract_expect
--- ----------------------------
+  UNIQUE KEY `idx_contract_id_date` (`contract_id`,`expect_date`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='合同应收信息表';
 
 -- ----------------------------
 -- Table structure for contract_receipt
@@ -135,16 +124,13 @@ CREATE TABLE `contract_receipt` (
   `agency_base` decimal(4,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A基础比例%',
   `agency_base_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A基础返点金额',
   `agency_fund` decimal(4,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A按时垫资奖励比例%',
-  `agency_fund_amount` decimal(10,2) NOT NULL,
+  `agency_fund_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A按时垫资奖励',
   `agency_special` decimal(4,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A特殊比例%',
   `agency_special_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A特殊返点金额',
   `agency_fee` decimal(4,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A集团代理服务费比例%',
   `agency_fee_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4A集团代理服务费金额',
-  `add_time` int(11) unsigned NOT NULL DEFAULT '0',
-  `update_time` int(11) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同到账信息表';
-
--- ----------------------------
--- Records of contract_receipt
--- ----------------------------
+  `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '新增时间',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_contract_id_date` (`contract_id`,`receipt_date`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='合同到账信息表';

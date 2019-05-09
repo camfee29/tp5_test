@@ -6,8 +6,32 @@
     <div class="title-center">
         <h2>代理服务器明细</h2>
     </div>
-
+    <div class="" style="overflow: auto;">
+        <div style="width: 2700px;">
     <table class="layui-table" id="table-receipt" style="width: 100%;">
+        <colgroup>
+            <col width="110">
+            <col width="100">
+            <col width="110">
+            <col width="100">
+            <col width="100">
+            <col width="120">
+            <col width="120">
+            <col width="150">
+            <col width="120">
+            <col width="180">
+            <col width="150">
+            <col width="120">
+            <col width="120">
+            <col width="120">
+            <col width="130">
+            <col width="160">
+            <col width="140">
+            <col width="120">
+            <col width="120">
+            <col width="180">
+            <col width="150">
+        </colgroup>
         <tr>
             <td>应收日期</td>
             <td>应收金额</td>
@@ -31,13 +55,14 @@
             <td>4A集团代理服务费比例</td>
             <td>4A集团代理服务费</td>
         </tr>
-        <volist name="list" id="vo">
+        <volist name="data" id="vo">
         <tr>
             <td class="input-td">{$vo.expect_date}</td>
             <td class="input-td">{$vo.expect_amount}</td>
             <td class="input-td">{$vo.receipt_date}</td>
             <td class="input-td">{$vo.receipt_amount}</td>
             <td class="input-td">{$vo.receipt_type}</td>
+            <td class="input-td">{$vo.ex_contract_no}</td>
             <td class="input-td">{$vo.is_return}</td>
             <td class="input-td">{$vo.local_new}</td>
             <td class="input-td">{$vo.local_new_amount}</td>
@@ -56,6 +81,11 @@
         </tr>
         </volist>
     </table>
+        </div>
+    </div>
+    <div style="margin:20px auto;text-align: center">
+        <a href="javascript:history.back();" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="return">返回</a>
+    </div>
 </div>
 
 <script>

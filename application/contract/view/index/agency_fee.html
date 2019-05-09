@@ -123,7 +123,7 @@
         <thead>
         <tr>
             <th lay-data="{field:'contract_id', width:80, sort: true}">序号</th>
-            <th lay-data="{field:'agency_fee_amount', width:110, sort: true}">代理费金额</th>
+            <th lay-data="{field:'total_agency_fee_amount', width:110, sort: true}">代理费金额</th>
             <th lay-data="{field:'launch_time', width:120, sort: true}">合同发起时间</th>
             <th lay-data="{field:'contract_no', width:120}">流程合同编号</th>
             <th lay-data="{field:'erp_contract_no', width:105}">ERP合同号</th>
@@ -151,13 +151,14 @@
     </table>
 
     <script type="text/html" id="barOperate">
-        <a href="{:url('expect_receipt')}" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="expect">查看明细</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="fee_info">查看明细</a>
     </script>
 </div>
 
 <script>
     layui.use(['form', 'table', 'laydate'], function(){
         var $ = layui.$,
+            table = layui.table,
             laydate = layui.laydate;
 
         //日期
@@ -168,6 +169,18 @@
         laydate.render({
             elem: '#end_time',
             trigger: 'click',
+        });
+        //监听工具条
+        table.on('tool(data_table)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'fee_info'){
+                location.href="{:url('agency_fee_info')}?id="+data.contract_id;
+            } else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    layer.close(index);
+                });
+            }
         });
     });
 </script>

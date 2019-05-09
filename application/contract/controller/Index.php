@@ -25,58 +25,18 @@ class Index extends Controller
         $page = input('page', 1);
         $limit = input('limit', 10);
         $where = [];
-        $contract_no = input('contract_no');
-        if (!empty($contract_no)) {
-            $where['c.contract_no'] = $contract_no;
-        }
-        $erp_contract_no = input('erp_contract_no');
-        if (!empty($erp_contract_no)) {
-            $where['c.erp_contract_no'] = $erp_contract_no;
-        }
-        $customer = input('customer');
-        if (!empty($customer)) {
-            $where['c.customer'] = $customer;
-        }
-        $agency = input('agency');
-        if (!empty($agency)) {
-            $where['c.agency'] = $agency;
-        }
-        $brand = input('brand');
-        if (!empty($brand)) {
-            $where['c.brand'] = $brand;
-        }
-        $direct_group = input('direct_group');
-        if (!empty($direct_group)) {
-            $where['cd.direct_group'] = $direct_group;
-        }
-        $direct_manager = input('direct_manager');
-        if (!empty($direct_manager)) {
-            $where['cd.direct_manager'] = $direct_manager;
-        }
-        $ad_type = input('ad_type');
-        if (!empty($ad_type)) {
-            $where['c.ad_type'] = $ad_type;
-        }
-        $channel = input('channel');
-        if (!empty($channel)) {
-            $where['c.channel'] = $channel;
-        }
-        $channel_manager = input('channel_manager');
-        if (!empty($channel_manager)) {
-            $where['c.channel_manager'] = $channel_manager;
-        }
-        $start_time = input('start_time');
-        $end_time = input('end_time');
-        if (!empty($start_time) && !empty($end_time)) {
-            $where['c.launch_time'] = [['>=', strtotime($start_time)], ['<=', strtotime($end_time)]];
-        } elseif (!empty($start_time)) {
-            $where['c.launch_time'] = ['>=', strtotime($start_time)];
-        } elseif (!empty($end_time)) {
-            $where['c.launch_time'] = ['<=', strtotime($end_time)];
-        }
-        $count = Db::name('contract')->alias('c')->field('c.*')->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')->where($where)->count();
+        $this->buildWhere($where);
+        $count = Db::name('contract')->alias('c')
+            ->field('c.*')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('c.contract_id')
+            ->where($where)->count();
         $offset = ($page - 1) * $limit;
-        $data = Db::name('contract')->alias('c')->field('c.*')->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')->where($where)->limit($offset, $limit)->select();
+        $data = Db::name('contract')->alias('c')
+            ->field('c.*')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('c.contract_id')
+            ->where($where)->limit($offset, $limit)->select();
         if (!empty($data)) {
             foreach ($data as $k => $v) {
                 $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
@@ -301,6 +261,29 @@ class Index extends Controller
     }
 
     /**
+     * 检查获取应收信息
+     */
+    public function ajaxCheckExpectDate()
+    {
+        $id = input('id', 0, 'intval');
+        $date = input('date', '', 'trim');
+        $data = [];
+        if (!empty($id) && !empty($date)) {
+            $where = [
+                'ce.contract_id' => $id,
+                'ce.expect_date' => $date
+            ];
+            $data = Db::name('contract_expect')->alias('ce')
+                ->field('ce.*,c.*')
+                ->join('contract c', 'c.contract_id=ce.contract_id', 'LEFT')
+                ->where($where)
+                ->find();
+        }
+
+        $this->ajaxReturn($data);
+    }
+
+    /**
      * 数据统计
      *
      * @return mixed
@@ -308,7 +291,14 @@ class Index extends Controller
     public function stat()
     {
         $param = $_GET;
+        if (!empty($param['start_time'])) {
+            $param['start_time'] = date('Y-m-d', strtotime('-30 day'));
+        }
+        if (!empty($param['end_time'])) {
+            $param['end_time'] = date('Y-m-d');
+        }
         $this->assign('param', $param);
+
 
         return $this->fetch();
     }
@@ -331,58 +321,20 @@ class Index extends Controller
         $page = input('page', 1);
         $limit = input('limit', 10);
         $where = [];
-        $contract_no = input('contract_no');
-        if (!empty($contract_no)) {
-            $where['c.contract_no'] = $contract_no;
-        }
-        $erp_contract_no = input('erp_contract_no');
-        if (!empty($erp_contract_no)) {
-            $where['c.erp_contract_no'] = $erp_contract_no;
-        }
-        $customer = input('customer');
-        if (!empty($customer)) {
-            $where['c.customer'] = $customer;
-        }
-        $agency = input('agency');
-        if (!empty($agency)) {
-            $where['c.agency'] = $agency;
-        }
-        $brand = input('brand');
-        if (!empty($brand)) {
-            $where['c.brand'] = $brand;
-        }
-        $direct_group = input('direct_group');
-        if (!empty($direct_group)) {
-            $where['cd.direct_group'] = $direct_group;
-        }
-        $direct_manager = input('direct_manager');
-        if (!empty($direct_manager)) {
-            $where['cd.direct_manager'] = $direct_manager;
-        }
-        $ad_type = input('ad_type');
-        if (!empty($ad_type)) {
-            $where['c.ad_type'] = $ad_type;
-        }
-        $channel = input('channel');
-        if (!empty($channel)) {
-            $where['c.channel'] = $channel;
-        }
-        $channel_manager = input('channel_manager');
-        if (!empty($channel_manager)) {
-            $where['c.channel_manager'] = $channel_manager;
-        }
-        $start_time = input('start_time');
-        $end_time = input('end_time');
-        if (!empty($start_time) && !empty($end_time)) {
-            $where['c.launch_time'] = [['>=', strtotime($start_time)], ['<=', strtotime($end_time)]];
-        } elseif (!empty($start_time)) {
-            $where['c.launch_time'] = ['>=', strtotime($start_time)];
-        } elseif (!empty($end_time)) {
-            $where['c.launch_time'] = ['<=', strtotime($end_time)];
-        }
-        $count = Db::name('contract_expect')->alias('ce')->field('ce.*,c.*')->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')->where($where)->count();
+        $this->buildWhere($where);
+        $count = Db::name('contract_expect')->alias('ce')
+            ->field('ce.id,ce.expect_date,ce.expect_amount,ce.is_return,c.*')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('ce.contract_id,ce.expect_date')
+            ->where($where)->count();
         $offset = ($page - 1) * $limit;
-        $data = Db::name('contract_expect')->alias('ce')->field('ce.*,c.*')->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')->where($where)->limit($offset, $limit)->select();
+        $data = Db::name('contract_expect')->alias('ce')
+            ->field('ce.id,ce.expect_date,ce.expect_amount,ce.is_return,c.*')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('ce.contract_id,ce.expect_date')
+            ->where($where)->limit($offset, $limit)->select();
         if (!empty($data)) {
             foreach ($data as $k => $v) {
                 $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
@@ -390,7 +342,8 @@ class Index extends Controller
                 $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
             }
         }
-        exit(json_encode(['code' => 0, 'count' => $count, 'data' => $data]));
+
+        $this->ajaxReturn(['code' => 0, 'count' => $count, 'data' => $data]);
     }
 
     /**
@@ -411,58 +364,20 @@ class Index extends Controller
         $page = input('page', 1);
         $limit = input('limit', 10);
         $where = [];
-        $contract_no = input('contract_no');
-        if (!empty($contract_no)) {
-            $where['c.contract_no'] = $contract_no;
-        }
-        $erp_contract_no = input('erp_contract_no');
-        if (!empty($erp_contract_no)) {
-            $where['c.erp_contract_no'] = $erp_contract_no;
-        }
-        $customer = input('customer');
-        if (!empty($customer)) {
-            $where['c.customer'] = $customer;
-        }
-        $agency = input('agency');
-        if (!empty($agency)) {
-            $where['c.agency'] = $agency;
-        }
-        $brand = input('brand');
-        if (!empty($brand)) {
-            $where['c.brand'] = $brand;
-        }
-        $direct_group = input('direct_group');
-        if (!empty($direct_group)) {
-            $where['cd.direct_group'] = $direct_group;
-        }
-        $direct_manager = input('direct_manager');
-        if (!empty($direct_manager)) {
-            $where['cd.direct_manager'] = $direct_manager;
-        }
-        $ad_type = input('ad_type');
-        if (!empty($ad_type)) {
-            $where['c.ad_type'] = $ad_type;
-        }
-        $channel = input('channel');
-        if (!empty($channel)) {
-            $where['c.channel'] = $channel;
-        }
-        $channel_manager = input('channel_manager');
-        if (!empty($channel_manager)) {
-            $where['c.channel_manager'] = $channel_manager;
-        }
-        $start_time = input('start_time');
-        $end_time = input('end_time');
-        if (!empty($start_time) && !empty($end_time)) {
-            $where['c.launch_time'] = [['>=', strtotime($start_time)], ['<=', strtotime($end_time)]];
-        } elseif (!empty($start_time)) {
-            $where['c.launch_time'] = ['>=', strtotime($start_time)];
-        } elseif (!empty($end_time)) {
-            $where['c.launch_time'] = ['<=', strtotime($end_time)];
-        }
-        $count = Db::name('contract_receipt')->alias('cr')->field('cr.*,cr.contract_no as ex_contract_no,c.*')->join('contract c', 'cr.contract_id=c.contract_id')->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')->where($where)->count();
+        $this->buildWhere($where);
+        $count = Db::name('contract_receipt')->alias('cr')
+            ->field('cr.id,cr.receipt_date,cr.receipt_amount,cr.receipt_type,cr.expect_date,cr.expect_amount,cr.is_return,cr.contract_no as ex_contract_no,c.*')
+            ->join('contract c', 'cr.contract_id=c.contract_id')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('cr.contract_id,cr.receipt_date,cr.receipt_date')
+            ->where($where)->count();
         $offset = ($page - 1) * $limit;
-        $data = Db::name('contract_receipt')->alias('cr')->field('cr.*,cr.contract_no as ex_contract_no,c.*')->join('contract c', 'cr.contract_id=c.contract_id')->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')->where($where)->limit($offset, $limit)->select();
+        $data = Db::name('contract_receipt')->alias('cr')
+            ->field('cr.*,cr.contract_no as ex_contract_no,c.*')
+            ->join('contract c', 'cr.contract_id=c.contract_id')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('cr.contract_id,cr.receipt_date,cr.receipt_date')
+            ->where($where)->limit($offset, $limit)->select();
         if (!empty($data)) {
             foreach ($data as $k => $v) {
                 $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
@@ -471,7 +386,8 @@ class Index extends Controller
                 $data[$k]['receipt_type'] = $this->receipt_type[$v['receipt_type']];
             }
         }
-        exit(json_encode(['code' => 0, 'count' => $count, 'data' => $data]));
+
+        $this->ajaxReturn(['code' => 0, 'count' => $count, 'data' => $data]);
     }
 
     /**
@@ -493,8 +409,217 @@ class Index extends Controller
         $limit = input('limit', 10);
         $where = [
             'ce.expect_date' => ['<', date('Y-m-d')],
-            'cr.receipt_date' => [['exp', Db::raw('IS NULL')], ['>', 'cr.expect_date'], 'or'],
+            'cr.receipt_date' => [['exp', Db::raw('IS NULL')], ['exp', Db::raw('> cr.expect_date')], 'or'],
         ];
+        $this->buildWhere($where);
+        $count = Db::name('contract_expect')->alias('ce')
+            ->field('ce.id,ce.expect_date,ce.expect_amount,(
+		CASE
+		WHEN cr.receipt_amount IS NULL THEN
+			0
+		ELSE
+			sum(cr.receipt_amount)
+		END
+	) AS receipt_amount,c.*')
+            ->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->where($where)
+            ->group('ce.expect_date')
+            ->count();
+        $offset = ($page - 1) * $limit;
+        $data = Db::name('contract_expect')->alias('ce')
+            ->field('ce.id,ce.expect_date,ce.expect_amount,(
+		CASE
+		WHEN cr.receipt_amount IS NULL THEN
+			0
+		ELSE
+			sum(cr.receipt_amount)
+		END
+	) AS receipt_amount,c.*')
+            ->join('contract_receipt cr', 'ce.contract_id = cr.contract_id and ce.expect_date = cr.expect_date', 'LEFT')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->where($where)
+            ->group('ce.expect_date')
+            ->limit($offset, $limit)->select();
+        if (!empty($data)) {
+            $contract_ids = $contract_expect_dates = [];
+            foreach ($data as $k => $v) {
+                $contract_ids[$v['contract_id']] = $v['contract_id'];
+                $contract_expect_dates[$v['expect_date']] = $v['expect_date'];
+            }
+            // 计算逾期天数
+            $receipts = Db::name('contract_receipt')
+                ->field('*,sum(receipt_amount) as receipt_amount,max(receipt_date) as receipt_date')
+                ->where([
+                'contract_id' => ['in', $contract_ids],
+                'expect_date' => ['in', $contract_expect_dates]
+            ])
+                ->group('contract_id,expect_date')
+                ->select();
+            $receipt_list = [];
+            if (!empty($receipts)) {
+                foreach ($receipts as $k => $v) {
+                    $receipt_list[$v['contract_id']][$v['expect_date']] = $v;
+                }
+            }
+            // 计算逾期金额
+            $receipts = Db::name('contract_receipt')
+                ->field('*,sum(receipt_amount) as receipt_amount')
+                ->where([
+                'contract_id' => ['in', $contract_ids],
+                'expect_date' => [['in', $contract_expect_dates],['exp', Db::raw('>= receipt_date')]]
+            ])
+                ->group('contract_id,expect_date')->select();
+            $receipt_amount = [];
+            if (!empty($receipts)) {
+                foreach ($receipts as $k => $v) {
+                    $receipt_amount[$v['contract_id']][$v['expect_date']] = $v;
+                }
+            }
+            foreach ($data as $k => $v) {
+                $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
+                $data[$k]['start_time'] = date('Y-m-d', $v['start_time']);
+                $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
+                $data[$k]['overdue_date'] = $v['expect_date'];
+                if (empty($v['receipt_amount']) || $v['receipt_amount'] == 0) {
+                    $data[$k]['overdue_amount'] = $v['expect_amount'];
+                } else {
+                    if (isset($receipt_amount[$v['contract_id']][$v['expect_date']])) {
+                        $tmp = $receipt_amount[$v['contract_id']][$v['expect_date']];
+                        $data[$k]['overdue_amount'] = $v['expect_amount'] - $tmp['receipt_amount'];
+                    } else {
+                        $data[$k]['overdue_amount'] = $v['expect_amount'];
+                    }
+                }
+                $data[$k]['overdue_day'] = floor((strtotime(date('Y-m-d')) - strtotime($v['expect_date'])) / 86400);
+                if (isset($receipt_list[$v['contract_id']][$v['expect_date']])) {
+                    $tmp = $receipt_list[$v['contract_id']][$v['expect_date']];
+                    if ($tmp['receipt_amount'] >= $v['expect_amount']) {
+                        $data[$k]['overdue_day'] = floor((strtotime($tmp['receipt_date']) - strtotime($v['expect_date'])) / 86400);
+                    }
+                }
+            }
+        }
+
+        $this->ajaxReturn(['code' => 0, 'count' => $count, 'data' => $data]);
+    }
+
+    /**
+     * 结算余额
+     *
+     * @return mixed
+     */
+    public function balance()
+    {
+        $param = $_GET;
+        $this->assign('param', $param);
+
+        return $this->fetch();
+    }
+
+    public function ajaxBalance()
+    {
+        $page = input('page', 1);
+        $limit = input('limit', 10);
+        $where = [];
+        $this->buildWhere($where);
+        $count = Db::name('contract')->alias('c')
+            ->field('c.*')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('c.contract_id')
+            ->where($where)->count();
+        $offset = ($page - 1) * $limit;
+        $data = Db::name('contract')->alias('c')
+            ->field('c.*')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('c.contract_id')
+            ->where($where)->limit($offset, $limit)->select();
+        if (!empty($data)) {
+            foreach ($data as $k => $v) {
+                $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
+                $data[$k]['start_time'] = date('Y-m-d', $v['start_time']);
+                $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
+            }
+        }
+
+        $this->ajaxReturn(['code' => 0, 'count' => $count, 'data' => $data]);
+    }
+
+    /**
+     * 代理服务费
+     *
+     * @return mixed
+     */
+    public function agency_fee()
+    {
+        $param = $_GET;
+        $this->assign('param', $param);
+
+        return $this->fetch();
+    }
+
+    public function ajaxAgencyFee()
+    {
+        $page = input('page', 1);
+        $limit = input('limit', 10);
+        $where = [];
+        $this->buildWhere($where);
+        $count = Db::name('contract_receipt')->alias('cr')
+            ->field('sum(cr.agency_fee_amount) as total_agency_fee_amount,c.*')
+            ->join('contract c', 'cr.contract_id=c.contract_id')
+            ->group('cr.contract_id')
+            ->where($where)->count();
+        $offset = ($page - 1) * $limit;
+        $data = Db::name('contract_receipt')->alias('cr')
+            ->field('sum(cr.agency_fee_amount) as total_agency_fee_amount,c.*')
+            ->join('contract c', 'cr.contract_id=c.contract_id')
+            ->group('cr.contract_id')
+            ->where($where)->limit($offset, $limit)->select();
+        if (!empty($data)) {
+            foreach ($data as $k => $v) {
+                $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
+                $data[$k]['start_time'] = date('Y-m-d', $v['start_time']);
+                $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
+            }
+        }
+
+        $this->ajaxReturn(['code' => 0, 'count' => $count, 'data' => $data]);
+    }
+
+    /**
+     * 代理费明细
+     *
+     * @return mixed
+     */
+    public function agency_fee_info()
+    {
+        $cid = input('id', 0, 'intval');
+        $where = [
+            'cr.contract_id' => $cid,
+        ];
+        $data = Db::name('contract_receipt')->alias('cr')
+            ->field('cr.*,cr.contract_no as ex_contract_no')
+            ->join('contract c', 'cr.contract_id=c.contract_id')
+            ->join('contract_direct cd', 'cd.contract_id=c.contract_id', 'LEFT')
+            ->group('cr.contract_id,cr.receipt_date,cr.receipt_date')
+            ->where($where)->select();
+        if (!empty($data)) {
+            foreach ($data as $k => $v) {
+                $data[$k]['is_return'] = $v['is_return'] ? '是' : '否';
+            }
+        }
+        $this->assign('data', $data);
+
+        return $this->fetch();
+    }
+
+    /**
+     * 构建查询条件
+     *
+     * @param $where
+     */
+    private function buildWhere(&$where)
+    {
         $contract_no = input('contract_no');
         if (!empty($contract_no)) {
             $where['c.contract_no'] = $contract_no;
@@ -514,6 +639,14 @@ class Index extends Controller
         $brand = input('brand');
         if (!empty($brand)) {
             $where['c.brand'] = $brand;
+        }
+        $direct_group = input('direct_group');
+        if (!empty($direct_group)) {
+            $where['cd.direct_group'] = $direct_group;
+        }
+        $direct_manager = input('direct_manager');
+        if (!empty($direct_manager)) {
+            $where['cd.direct_manager'] = $direct_manager;
         }
         $ad_type = input('ad_type');
         if (!empty($ad_type)) {
@@ -536,167 +669,13 @@ class Index extends Controller
         } elseif (!empty($end_time)) {
             $where['c.launch_time'] = ['<=', strtotime($end_time)];
         }
-        $count = Db::name('contract_expect')->alias('ce')->field('ce.id,ce.expect_date,ce.expect_amount,(
-		CASE
-		WHEN cr.receipt_amount IS NULL THEN
-			0
-		ELSE
-			sum(cr.receipt_amount)
-		END
-	) AS receipt_amount,c.*')->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')->where($where)->group('ce.expect_date')->count();
-        $offset = ($page - 1) * $limit;
-        $data = Db::name('contract_expect')->alias('ce')->field('ce.id,ce.expect_date,ce.expect_amount,(
-		CASE
-		WHEN cr.receipt_amount IS NULL THEN
-			0
-		ELSE
-			sum(cr.receipt_amount)
-		END
-	) AS receipt_amount,c.*')->join('contract_receipt cr', 'ce.contract_id = cr.contract_id and ce.expect_date = cr.expect_date', 'LEFT')->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')->where($where)->group('ce.expect_date')->limit($offset, $limit)->select();
-        if (!empty($data)) {
-            $contract_ids = $contract_expect_dates = [];
-            foreach ($data as $k => $v) {
-                $contract_ids[$v['contract_id']] = $v['contract_id'];
-                $contract_expect_dates[$v['expect_date']] = $v['expect_date'];
-            }
-            $receipts = Db::name('contract_receipt')->field('*,sum(receipt_amount) as receipt_amount,max(receipt_date) as receipt_date')->where([
-                'contract_id' => [
-                    'in',
-                    $contract_ids
-                ],
-                'expect_date' => ['in', $contract_expect_dates]
-            ])->group('contract_id,expect_date')->select();
-            $receipt_list = [];
-            if (!empty($receipts)) {
-                foreach ($receipts as $k => $v) {
-                    $receipt_list[$v['contract_id']][$v['expect_date']] = $v;
-                }
-            }
-            foreach ($data as $k => $v) {
-                $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
-                $data[$k]['start_time'] = date('Y-m-d', $v['start_time']);
-                $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
-                $data[$k]['overdue_date'] = $v['expect_date'];
-                if (empty($v['receipt_amount']) || $v['receipt_amount'] == 0) {
-                    $data[$k]['overdue_amount'] = $v['expect_amount'];
-                } else {
-                    $data[$k]['overdue_amount'] = $v['receipt_amount'];
-                }
-                $data[$k]['overdue_day'] = floor((strtotime(date('Y-m-d')) - strtotime($v['expect_date'])) / 86400);
-                if (isset($receipt_list[$v['contract_id']][$v['expect_date']])) {
-                    $tmp = $receipt_list[$v['contract_id']][$v['expect_date']];
-                    if ($tmp['receipt_amount'] >= $v['expect_amount']) {
-                        $data[$k]['overdue_day'] = floor((strtotime($tmp['receipt_date']) - strtotime($v['expect_date'])) / 86400);
-                    }
-                }
-            }
-        }
-        exit(json_encode(['code' => 0, 'count' => $count, 'data' => $data]));
     }
 
     /**
-     * 结算余额
      *
-     * @return mixed
+     * @param $data
      */
-    public function balance()
-    {
-        $param = $_GET;
-        $this->assign('param', $param);
-
-        return $this->fetch();
-    }
-
-    public function ajaxBalance()
-    {
-        $page = input('page', 1);
-        $limit = input('limit', 10);
-        for ($i = 0; $i < 10; $i++) {
-
-            $data[] = [
-                'balance_amount' => '600000',
-                'balance' => '500000',
-                'contract_id' => ($page - 1) * $limit + $i,
-                'launch_time' => 'xxxxx',
-                'contract_no' => 'xxxxx',
-                'erp_contract_no' => 'xxxxx',
-                'customer' => 'xxxxx',
-                'final_customer' => 'xxxxx',
-                'agency' => 'xxxxx',
-                'agency_type' => 'xxxxx',
-                'mian_brand' => 'xxxxx',
-                'brand' => 'xxxxx',
-                'brand_type' => 'xxxxx',
-                'channel' => 'xxxxx',
-                'channel_manager' => 'xxxxx',
-                'start_time' => 'xxxxx',
-                'end_time' => 'xxxxx',
-                'price' => 'xxxxx',
-                'put_volume' => 'xxxxx',
-                'amount' => 'xxxxx',
-                'final_amount' => 'xxxxx',
-                'ad_type' => 'xxxxx',
-            ];
-        }
-        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data]));
-    }
-
-    /**
-     * 代理服务费
-     *
-     * @return mixed
-     */
-    public function agency_fee()
-    {
-        $param = $_GET;
-        $this->assign('param', $param);
-
-        return $this->fetch();
-    }
-
-    public function ajaxAgencyFee()
-    {
-        $page = input('page', 1);
-        $limit = input('limit', 10);
-        for ($i = 0; $i < 10; $i++) {
-
-            $data[] = [
-                'agency_fee_amount' => '600000',
-                'contract_id' => ($page - 1) * $limit + $i,
-                'launch_time' => 'xxxxx',
-                'contract_no' => 'xxxxx',
-                'erp_contract_no' => 'xxxxx',
-                'customer' => 'xxxxx',
-                'final_customer' => 'xxxxx',
-                'agency' => 'xxxxx',
-                'agency_type' => 'xxxxx',
-                'mian_brand' => 'xxxxx',
-                'brand' => 'xxxxx',
-                'brand_type' => 'xxxxx',
-                'channel' => 'xxxxx',
-                'channel_manager' => 'xxxxx',
-                'start_time' => 'xxxxx',
-                'end_time' => 'xxxxx',
-                'price' => 'xxxxx',
-                'put_volume' => 'xxxxx',
-                'amount' => 'xxxxx',
-                'final_amount' => 'xxxxx',
-                'ad_type' => 'xxxxx',
-            ];
-        }
-        exit(json_encode(['code' => 0, 'count' => 1000, 'data' => $data]));
-    }
-
-    /**
-     * 代理费明细
-     *
-     * @return mixed
-     */
-    public function agency_fee_info()
-    {
-        $list = [];
-        $this->assign('list', $list);
-
-        return $this->fetch();
+    private function ajaxReturn($data) {
+        exit(json_encode($data));
     }
 }
