@@ -4,6 +4,7 @@ namespace app\contract\controller;
 
 use think\Controller;
 use think\Db;
+use app\contract\logic\ContractLogic;
 
 class Index extends Controller
 {
@@ -80,7 +81,13 @@ class Index extends Controller
         $data['launch_time'] = strtotime($data['launch_time']);
         $data['start_time'] = strtotime($data['start_time']);
         $data['end_time'] = strtotime($data['end_time']);
+        if ($data['amount'] > $data['final_amount']) {
+            $data['balance_amount'] = $data['balance'] = $data['amount'] - $data['final_amount'];
+        }
         if (!empty($cid)) {
+            // 可用结算余额计算
+            $logic = new ContractLogic();
+            $data['balance'] = $logic->calcBalance($data);
             // 修改
             $data['update_time'] = time();
             $res = Db::name('contract')->where('contract_id', $cid)->update($data);
@@ -92,6 +99,9 @@ class Index extends Controller
         $direct_update = $direct_add = [];
         if (!empty($ids)) {
             foreach ($ids as $k => $id) {
+                if (empty($direct_group[$k]) && empty($direct_manager[$k]) && empty($rate[$k])) {
+                    continue;
+                }
                 if (!empty($id)) {
                     $direct_update[$id] = [
                         'direct_group' => trim($direct_group[$k]),
@@ -138,10 +148,14 @@ class Index extends Controller
     {
         $contract_id = input('contract_id', 0, 'intval');
         if (!empty($_POST)) {
+            // 应收信息修改
             if (!empty($_POST['expect'])) {
                 $da = $_POST['expect'];
                 $expect_add = $expect_update = [];
                 foreach ($da['id'] as $k => $v) {
+                    if (empty($da['expect_date'][$k]) && empty($da['expect_amount'][$k])) {
+                        continue;
+                    }
                     if (empty($v)) {
                         $expect_add[] = [
                             'contract_id' => $contract_id,
@@ -175,10 +189,14 @@ class Index extends Controller
                     Db::name('contract_expect')->insertAll($expect_add);
                 }
             }
+            // 到账信息修改
             if (!empty($_POST['receipt'])) {
                 $da = $_POST['receipt'];
                 $receipt_add = $receipt_update = [];
                 foreach ($da['id'] as $k => $v) {
+                    if (empty($da['expect_date'][$k]) && empty($da['receipt_date'][$k])) {
+                        continue;
+                    }
                     if (empty($v)) {
                         $receipt_add[] = [
                             'contract_id' => $contract_id,
@@ -233,9 +251,14 @@ class Index extends Controller
                     }
                 }
                 $not_del = [];
+                $err_msg = '';
+                $logic = new ContractLogic();
                 if (!empty($receipt_update)) {
                     foreach ($receipt_update as $id => $val) {
                         $not_del[$id] = $id;
+                        if ($val['receipt_type'] == 2 && !empty($val['contract_no'])) {
+                            $err_msg .= $logic->checkContractBalance($val, $id);
+                        }
                         Db::name('contract_receipt')->where('id', $id)->update($val);
                     }
                 }
@@ -245,7 +268,15 @@ class Index extends Controller
                     'id' => ['not in', $not_del]
                 ])->delete();
                 if (!empty($receipt_add)) {
-                    Db::name('contract_receipt')->insertAll($receipt_add);
+                    foreach ($receipt_add as $val) {
+                        if ($val['receipt_type'] == 2 && !empty($val['contract_no'])) {
+                            $err_msg .= $logic->checkContractBalance($val);
+                        }
+                        Db::name('contract_receipt')->insert($val);
+                    }
+                }
+                if (!empty($err_msg)) {
+                    $this->error($err_msg);
                 }
             }
             $this->success('操作成功');
@@ -291,14 +322,81 @@ class Index extends Controller
     public function stat()
     {
         $param = $_GET;
-        if (!empty($param['start_time'])) {
+        if (empty($param['start_time'])) {
             $param['start_time'] = date('Y-m-d', strtotime('-30 day'));
         }
-        if (!empty($param['end_time'])) {
+        if (empty($param['end_time'])) {
             $param['end_time'] = date('Y-m-d');
         }
-        $this->assign('param', $param);
+        $where = [];
+        $this->buildWhere($where);
 
+        $info = [
+            'date_range' => $param['start_time'] . ' - ' . $param['end_time'],
+        ];
+        // 结算
+        $where1 = $where;
+        $where1['final_amount'] = ['>', 0];
+        $info['balance_count'] = Db::name('contract')->alias('c')->where($where1)->count();
+        $info['balance_amount'] = Db::name('contract')->alias('c')->where($where1)->sum('balance_amount');
+        unset($where['c.launch_time']);
+        // 应收
+        $where2 = $where;
+        $where2['ce.expect_date'] = [['>=', $param['start_time']], ['<=', $param['end_time']]];
+        $info['expect_count'] = Db::name('contract_expect')->alias('ce')->join('contract c', 'c.contract_id=ce.contract_id', 'LEFT')->where($where2)->count();
+        $info['expect_amount'] = Db::name('contract_expect')->alias('ce')->join('contract c', 'c.contract_id=ce.contract_id', 'LEFT')->where($where2)->sum('expect_amount');
+        // 逾期 todo
+        $where2['cr.receipt_date'] = [['exp', Db::raw('IS NULL')], ['exp', Db::raw('> cr.expect_date')], 'or'];
+        $info['overdue_count'] = Db::name('contract_expect')->alias('ce')
+            ->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->where($where2)
+            ->group('ce.contract_id,ce.expect_date')
+            ->count();
+        $info['overdue_amount'] = Db::name('contract_expect')->alias('ce')
+            ->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->where($where2)
+            ->group('ce.contract_id,ce.expect_date')
+            ->sum('ce.expect_amount');
+        $expect_amount = 0;
+        $overdue_list = Db::name('contract_expect')->alias('ce')
+            ->field('ce.contract_id,ce.expect_date')
+            ->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->where($where2)
+            ->group('ce.contract_id,ce.expect_date')
+            ->select();
+        if (!empty($overdue_list)) {
+            $ids = $dates = [];
+            foreach ($overdue_list as $v) {
+                $ids[$v['contract_id']] = $v['contract_id'];
+                $dates[$v['expect_date']] = $v['expect_date'];
+            }
+            $where2['cr.receipt_date'] = ['exp', Db::raw('<= cr.expect_date')];
+            $where2['cr.contract_id'] = ['in', $ids];
+            $where2['cr.expect_date'] = ['in', $dates];
+            $expect_amount = Db::name('contract_expect')->alias('ce')
+                ->field('ce.contract_id,ce.expect_date')
+                ->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')
+                ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+                ->where($where2)
+                ->group('ce.contract_id,ce.expect_date')
+                ->sum('cr.receipt_amount');
+        }
+        $info['overdue_amount'] -= $expect_amount;
+        // 到账
+        $where3 = $where;
+        $where3['cr.receipt_date'] = [['>=', $param['start_time']], ['<=', $param['end_time']]];
+        $info['receipt_count'] = Db::name('contract_receipt')->alias('cr')->join('contract c', 'c.contract_id=cr.contract_id', 'LEFT')->where($where3)->count();
+        $info['receipt_amount'] = Db::name('contract_receipt')->alias('cr')->join('contract c', 'c.contract_id=cr.contract_id', 'LEFT')->where($where3)->sum('receipt_amount');
+        // 代理服务费
+        $where3['cr.agency_fee'] = ['>', 0];
+        $info['agency_fee_count'] = Db::name('contract_receipt')->alias('cr')->join('contract c', 'c.contract_id=cr.contract_id', 'LEFT')->where($where3)->count();
+        $info['agency_fee_amount'] = Db::name('contract_receipt')->alias('cr')->join('contract c', 'c.contract_id=cr.contract_id', 'LEFT')->where($where3)->sum('cr.agency_fee_amount');
+
+        $this->assign('param', $param);
+        $this->assign('info', $info);
 
         return $this->fetch();
     }
@@ -409,10 +507,42 @@ class Index extends Controller
         $limit = input('limit', 10);
         $where = [
             'ce.expect_date' => ['<', date('Y-m-d')],
-            'cr.receipt_date' => [['exp', Db::raw('IS NULL')], ['exp', Db::raw('> cr.expect_date')], 'or'],
+            'cr.receipt_date' => ['exp', Db::raw('<= cr.expect_date')],
         ];
         $this->buildWhere($where);
-        $count = Db::name('contract_expect')->alias('ce')
+        $list = Db::name('contract_expect')->alias('ce')
+            ->field('ce.id,ce.expect_amount,(
+		CASE
+		WHEN cr.receipt_amount IS NULL THEN
+			0
+		ELSE
+			sum(cr.receipt_amount)
+		END
+	) AS receipt_amount')
+            ->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')
+            ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
+            ->where($where)
+            ->group('ce.contract_id,ce.expect_date')
+            ->having('ce.expect_amount > receipt_amount')
+            ->order('ce.id', 'desc')
+            ->limit(5000)
+            ->select();
+        $ids = [];
+        if (!empty($list)) {
+            foreach ($list as $v) {
+                $ids[$v['id']] = $v['id'];
+            }
+            unset($list);
+        }
+        $where = [
+            'ce.expect_date' => ['<', date('Y-m-d')],
+            'cr.receipt_date' => [['exp', Db::raw('IS NULL')], ['exp', Db::raw('> cr.expect_date')], 'or'],
+        ];
+        if (!empty($ids)) {
+            $where_or = ['ce.id' => ['in', $ids]];
+        }
+        $this->buildWhere($where);
+        $query = Db::name('contract_expect')->alias('ce')
             ->field('ce.id,ce.expect_date,ce.expect_amount,(
 		CASE
 		WHEN cr.receipt_amount IS NULL THEN
@@ -424,10 +554,13 @@ class Index extends Controller
             ->join('contract_receipt cr', 'cr.contract_id = ce.contract_id and cr.expect_date = ce.expect_date', 'LEFT')
             ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
             ->where($where)
-            ->group('ce.expect_date')
-            ->count();
+            ->group('ce.contract_id,ce.expect_date');
+        if (!empty($where_or)) {
+            $query = $query->whereOr($where_or);
+        }
+        $count = $query->count();
         $offset = ($page - 1) * $limit;
-        $data = Db::name('contract_expect')->alias('ce')
+        $query = Db::name('contract_expect')->alias('ce')
             ->field('ce.id,ce.expect_date,ce.expect_amount,(
 		CASE
 		WHEN cr.receipt_amount IS NULL THEN
@@ -439,8 +572,13 @@ class Index extends Controller
             ->join('contract_receipt cr', 'ce.contract_id = cr.contract_id and ce.expect_date = cr.expect_date', 'LEFT')
             ->join('contract c', 'ce.contract_id=c.contract_id', 'LEFT')
             ->where($where)
-            ->group('ce.expect_date')
-            ->limit($offset, $limit)->select();
+            ->group('ce.contract_id,ce.expect_date')
+            ->order('ce.id', 'desc')
+            ->limit($offset, $limit);
+        if (!empty($where_or)) {
+            $query = $query->whereOr($where_or);
+        }
+        $data = $query->select();
         if (!empty($data)) {
             $contract_ids = $contract_expect_dates = [];
             foreach ($data as $k => $v) {
