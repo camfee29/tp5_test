@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-05-09 10:40:55
+Date: 2019-05-10 18:09:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -65,8 +65,8 @@ CREATE TABLE `contract` (
   `duty_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计权责',
   `is_erp` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否录入ERP 0:否 1：是',
   PRIMARY KEY (`contract_id`),
-  KEY `idx_flow_id` (`flow_id`) USING BTREE,
-  KEY `idx_contract_no` (`contract_no`) USING BTREE
+  UNIQUE KEY `idx_contract_no` (`contract_no`) USING BTREE,
+  KEY `idx_flow_id` (`flow_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='合同基本信息表';
 
 -- ----------------------------
@@ -99,7 +99,7 @@ CREATE TABLE `contract_expect` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_contract_id_date` (`contract_id`,`expect_date`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='合同应收信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='合同应收信息表';
 
 -- ----------------------------
 -- Table structure for contract_receipt
@@ -132,5 +132,5 @@ CREATE TABLE `contract_receipt` (
   `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '新增时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_contract_id_date` (`contract_id`,`receipt_date`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='合同到账信息表';
+  UNIQUE KEY `idx_contract_id_date` (`contract_id`,`expect_date`,`receipt_date`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='合同到账信息表';
