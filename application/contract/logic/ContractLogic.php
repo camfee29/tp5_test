@@ -38,6 +38,7 @@ class ContractLogic extends Model
      * @param     $info
      * @param int $id
      * @return string
+     * @throws \think\Exception
      */
     public function checkContractBalance(&$info, $id = 0)
     {
