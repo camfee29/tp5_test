@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-05-13 15:15:50
+Date: 2019-05-13 18:14:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -84,6 +84,31 @@ CREATE TABLE `contract_direct` (
   PRIMARY KEY (`id`),
   KEY `idx_contract_id` (`contract_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='合同直客信息表';
+
+-- ----------------------------
+-- Table structure for contract_duty
+-- ----------------------------
+DROP TABLE IF EXISTS `contract_duty`;
+CREATE TABLE `contract_duty` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `contract_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同id',
+  `duty_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '权责总额',
+  `duty1` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '1期权责',
+  `duty2` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '2期权责',
+  `duty3` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '3期权责',
+  `duty4` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '4期权责',
+  `duty5` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '5期权责',
+  `duty6` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '6期权责',
+  `duty7` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '7期权责',
+  `duty8` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '8期权责',
+  `duty9` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '9期权责',
+  `duty10` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '10期权责',
+  `duty11` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '11期权责',
+  `duty12` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '12期权责',
+  `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for contract_expect
