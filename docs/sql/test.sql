@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-05-13 18:14:05
+Date: 2019-05-13 18:22:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -107,7 +107,8 @@ CREATE TABLE `contract_duty` (
   `duty12` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '12期权责',
   `add_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `_contract_id` (`contract_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------

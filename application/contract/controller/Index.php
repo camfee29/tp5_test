@@ -758,6 +758,24 @@ class Index extends Controller
     }
 
     /**
+     * 合同权责
+     *
+     * @return mixed
+     */
+    public function duty()
+    {
+        $contract_id = input('contract_id', 0, 'intval');
+        if (!empty($_POST)) {
+
+        }
+        $duty = Db::name('contract_duty')->where('contract_id', $contract_id)->select();
+        $this->assign('contract_id', $contract_id);
+        $this->assign('duty', $duty);
+
+        return $this->fetch();
+    }
+
+    /**
      * 构建查询条件
      *
      * @param $where
