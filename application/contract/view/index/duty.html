@@ -1,0 +1,81 @@
+<include file="public/layout" />
+
+<body>
+
+<div class="layui-container">
+    <div class="title-center">
+        <h2>合同权责信息</h2>
+    </div>
+    <div class="form-container" id="form-container">
+        <form class="layui-form" method="post" action="{:url('duty')}">
+            <input type="hidden" name="contract_id" id="contract_id" value="{$contract_id}">
+            <div class="div">
+                <div class="" style="overflow: auto;">
+                    <div style="width: 1300px;">
+                <table class="layui-table" id="table-receipt" style="width: auto;">
+                    <colgroup>
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                        <col width="100">
+                    </colgroup>
+                    <tr>
+                        <td>权责总额</td>
+                        <td>1期</td>
+                        <td>2期</td>
+                        <td>3期</td>
+                        <td>4期</td>
+                        <td>5期</td>
+                        <td>6期</td>
+                        <td>7期</td>
+                        <td>8期</td>
+                        <td>9期</td>
+                        <td>10期</td>
+                        <td>11期</td>
+                        <td>12期</td>
+                    </tr>
+                    <tr>
+                        <td class="input-td"><input type="text" name="duty_amount" value="{:isset($duty.duty_amount)?$duty.duty_amount:''}" class="input-text date-select"><input type="hidden" name="id" value="{:isset($duty.id)?$duty.id:''}"></td>
+                        <td class="input-td"><input type="text" name="duty1" value="{:isset($duty.duty1)?$duty.duty1:''}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="duty2" value="{:isset($duty.duty2)?$duty.duty2:''}" class="input-text date-select"></td>
+                        <td class="input-td"><input type="text" name="duty3" value="{:isset($duty.duty3)?$duty.duty3:''}" class="input-text data-change"></td>
+                        <td class="input-td"><input type="text" name="duty4" value="{:isset($duty.duty4)?$duty.duty4:''}" class="input-text data-change"></td>
+                        <td class="input-td"><input type="text" name="duty5" value="{:isset($duty.duty5)?$duty.duty5:''}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="duty6" value="{:isset($duty.duty6)?$duty.duty6:''}" class="input-text data-change"></td>
+                        <td class="input-td"><input type="text" name="duty7" value="{:isset($duty.duty7)?$duty.duty7:''}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="duty8" value="{:isset($duty.duty8)?$duty.duty8:''}" class="input-text data-change"></td>
+                        <td class="input-td"><input type="text" name="duty9" value="{:isset($duty.duty9)?$duty.duty9:''}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="duty10" value="{:isset($duty.duty10)?$duty.duty10:''}" class="input-text data-change"></td>
+                        <td class="input-td"><input type="text" name="duty11" value="{:isset($duty.duty11)?$duty.duty11:''}" class="input-text"></td>
+                        <td class="input-td"><input type="text" name="duty12" value="{:isset($duty.duty12)?$duty.duty12:''}" class="input-text data-change"></td>
+                    </tr>
+                </table>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align: center">
+                <button class="layui-btn" lay-submit="" lay-filter="submit">提交</button>
+                <a href="javascript:history.back();" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="return">返回</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'laydate'], function() {
+        var $ = layui.$;
+        var form = layui.form;
+
+    });
+</script>
+</body>
+</html>

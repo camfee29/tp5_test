@@ -766,9 +766,43 @@ class Index extends Controller
     {
         $contract_id = input('contract_id', 0, 'intval');
         if (!empty($_POST)) {
-
+            $id = input('id', 0, 'intval');
+            $da = $_POST;
+            $data = [];
+            $data['contract_id'] = $contract_id;
+            $data['duty_amount'] = floatval($da['duty_amount']);
+            $ai = $amount = 0;
+            $last = floatval($da['duty12']);
+            $avg = true;
+            for ($i = 12; $i > 0; $i--) {
+                $t = floatval($da['duty' . $i]);
+                if ($avg && $t == $last) {
+                    $ai = $i;
+                } else {
+                    $avg = false;
+                    $amount += $t;
+                }
+                $data['duty' . $i] = $t;
+            }
+            if ($amount > $data['duty_amount']) {
+                $this->error('分期权责大于权责总额');
+            }
+            $avg_amount = round(($data['duty_amount'] - $amount) / (12 - $ai + 1), 2);
+            if ($avg_amount > 0) {
+                for ($i = 12; $i >= $ai; $i--) {
+                    $data['duty' . $i] = $avg_amount;
+                }
+            }
+            if ($id) {
+                $data['update_time'] = time();
+                Db::name('contract_duty')->where('id', $id)->update($data);
+            } else {
+                $data['add_time'] = time();
+                Db::name('contract_duty')->insert($data);
+            }
+            $this->success('操作成功');
         }
-        $duty = Db::name('contract_duty')->where('contract_id', $contract_id)->select();
+        $duty = Db::name('contract_duty')->where('contract_id', $contract_id)->find();
         $this->assign('contract_id', $contract_id);
         $this->assign('duty', $duty);
 

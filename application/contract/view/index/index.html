@@ -200,7 +200,8 @@
                 location.href="{:url('expect_receipt')}?contract_id="+data.contract_id;
                 //layer.alert('到账：<br>'+ JSON.stringify(data))
             } else if(obj.event === 'duty'){ // 权责
-                layer.alert('权责：<br>'+ JSON.stringify(data))
+                location.href="{:url('duty')}?contract_id="+data.contract_id;
+                //layer.alert('权责：<br>'+ JSON.stringify(data))
             }
         });
 

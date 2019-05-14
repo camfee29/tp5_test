@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-05-13 18:22:27
+Date: 2019-05-14 11:12:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -67,7 +67,7 @@ CREATE TABLE `contract` (
   PRIMARY KEY (`contract_id`),
   UNIQUE KEY `idx_contract_no` (`contract_no`) USING BTREE,
   KEY `idx_flow_id` (`flow_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='合同基本信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同基本信息表';
 
 -- ----------------------------
 -- Table structure for contract_direct
@@ -83,7 +83,7 @@ CREATE TABLE `contract_direct` (
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_contract_id` (`contract_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='合同直客信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同直客信息表';
 
 -- ----------------------------
 -- Table structure for contract_duty
@@ -125,7 +125,7 @@ CREATE TABLE `contract_expect` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_contract_id_date` (`contract_id`,`expect_date`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='合同应收信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同应收信息表';
 
 -- ----------------------------
 -- Table structure for contract_receipt
@@ -159,4 +159,4 @@ CREATE TABLE `contract_receipt` (
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_contract_id_date` (`contract_id`,`expect_date`,`receipt_date`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='合同到账信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同到账信息表';

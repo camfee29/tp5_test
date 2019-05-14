@@ -107,7 +107,10 @@
                         <div class="layui-form-item">
                             <label class="layui-form-label">是否新品</label>
                             <div class="layui-input-block">
-                                <input type="text" name="is_new" lay-verify="is_new" autocomplete="off" class="layui-input"  value="{:isset($info.is_new)?$info.is_new:''}">
+                                <select name="is_new" lay-filter="is_new">
+                                    <option <if condition="!isset($info.is_new) ||$info.is_new eq 0">selected</if> value="0">否</option>
+                                    <option <if condition="$info.is_new eq 1">selected</if> value="1">是</option>
+                                </select>
                             </div>
                         </div>
                     </td>
