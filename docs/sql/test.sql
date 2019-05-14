@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2019-05-14 11:12:46
+Date: 2019-05-14 15:49:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -64,6 +64,7 @@ CREATE TABLE `contract` (
   `agency_fee_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计代理服务费',
   `duty_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '累计权责',
   `is_erp` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT '是否录入ERP 0:否 1：是',
+  `archive` varchar(255) NOT NULL DEFAULT '' COMMENT '合同存档',
   PRIMARY KEY (`contract_id`),
   UNIQUE KEY `idx_contract_no` (`contract_no`) USING BTREE,
   KEY `idx_flow_id` (`flow_id`) USING BTREE

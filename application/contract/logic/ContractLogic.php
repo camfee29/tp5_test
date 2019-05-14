@@ -156,7 +156,7 @@ class ContractLogic extends Model
         ])->sum('expect_amount');
         $amount2 = Db::name('contract_receipt')->where([
             'expect_date' => ['<', date('Y-m-d')],
-            'receipt_date' => ['exp', Db::raw('<= cr.expect_date')],
+            'receipt_date' => ['exp', Db::raw('<= expect_date')],
             'contract_id' => $info['contract_id']
         ])->sum('receipt_amount');
         $amount = $amount1 - $amount2;
