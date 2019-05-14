@@ -43,6 +43,7 @@ class Index extends Controller
                 $data[$k]['launch_time'] = date('Y-m-d', $v['launch_time']);
                 $data[$k]['start_time'] = date('Y-m-d', $v['start_time']);
                 $data[$k]['end_time'] = date('Y-m-d', $v['end_time']);
+                $data[$k]['is_erp'] = $v['is_erp'] ? '是' : '否';
             }
         }
         exit(json_encode(['code' => 0, 'count' => $count, 'data' => $data]));
@@ -85,9 +86,17 @@ class Index extends Controller
             $data['balance_amount'] = $data['balance'] = $data['amount'] - $data['final_amount'];
         }
         if (!empty($cid)) {
-            // 可用结算余额计算
+            // 可用结算余额等计算
             $logic = new ContractLogic();
-            $data['balance'] = $logic->calcBalance($data);
+            $info = $data;
+            $info['contract_id'] = $cid;
+            $data['balance'] = $logic->calcBalance($info);
+            $data['total_receipt_amount'] = $logic->calcReceipt($info);
+            $data['mortgage_amount'] = $logic->calcMortgage($info);
+            $data['charge_amount'] = $logic->calcCharge($info);
+            $data['overdue_amount'] = $logic->calcOverdue($info);
+            $data['agency_fee_amount'] = $logic->calcAgencyFee($info);
+            $data['duty_amount'] = $logic->calcDuty($info);
             // 修改
             $data['update_time'] = time();
             $res = Db::name('contract')->where('contract_id', $cid)->update($data);
@@ -191,6 +200,7 @@ class Index extends Controller
             }
             // 到账信息修改
             if (!empty($_POST['receipt'])) {
+                $logic = new ContractLogic();
                 $da = $_POST['receipt'];
                 $receipt_add = $receipt_update = [];
                 foreach ($da['id'] as $k => $v) {
@@ -250,13 +260,13 @@ class Index extends Controller
                         ];
                     }
                 }
-                $not_del = [];
+                $not_del = $contract_nos = [];
                 $err_msg = '';
-                $logic = new ContractLogic();
                 if (!empty($receipt_update)) {
                     foreach ($receipt_update as $id => $val) {
                         $not_del[$id] = $id;
                         if ($val['receipt_type'] == 2 && !empty($val['contract_no'])) {
+                            $contract_nos[$val['contract_no']] = $val['contract_no'];
                             $err_msg .= $logic->checkContractBalance($val, $id);
                         }
                         Db::name('contract_receipt')->where('id', $id)->update($val);
@@ -270,9 +280,22 @@ class Index extends Controller
                 if (!empty($receipt_add)) {
                     foreach ($receipt_add as $val) {
                         if ($val['receipt_type'] == 2 && !empty($val['contract_no'])) {
+                            $contract_nos[$val['contract_no']] = $val['contract_no'];
                             $err_msg .= $logic->checkContractBalance($val);
                         }
                         Db::name('contract_receipt')->insert($val);
+                    }
+                }
+                $info = [
+                    'contract_id' => $contract_id,
+                ];
+                $logic->calcReceipt($info, true);
+                $logic->calcCharge($info, true);
+                $logic->calcOverdue($info, true);
+                $logic->calcAgencyFee($info, true);
+                if (!empty($contract_nos)) {
+                    foreach ($contract_nos as $contract_no) {
+                        $logic->calcMortgage(['contract_no' => $contract_no], true);
                     }
                 }
                 if (!empty($err_msg)) {
@@ -800,6 +823,13 @@ class Index extends Controller
                 $data['add_time'] = time();
                 Db::name('contract_duty')->insert($data);
             }
+            $logic = new ContractLogic();
+            $info = [
+                'contract_id' => $contract_id,
+                'duty_amount' => -1,
+            ];
+            $logic->calcDuty($info, true);
+
             $this->success('操作成功');
         }
         $duty = Db::name('contract_duty')->where('contract_id', $contract_id)->find();

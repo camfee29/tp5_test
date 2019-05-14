@@ -38,7 +38,6 @@ class ContractLogic extends Model
      * @param     $info
      * @param int $id
      * @return string
-     * @throws \think\Exception
      */
     public function checkContractBalance(&$info, $id = 0)
     {
@@ -83,5 +82,126 @@ class ContractLogic extends Model
         }
 
         return $msg;
+    }
+
+    /**
+     * 合同到账更新计算
+     *
+     * @param      $info
+     * @param bool $auto_update
+     * @return float|int
+     */
+    public function calcReceipt($info, $auto_update = false)
+    {
+        $amount = Db::name('contract_receipt')->where('contract_id', $info['contract_id'])->sum('receipt_amount');
+        if ($auto_update) {
+            Db::name('contract')->where('contract_id', $info['contract_id'])->update(['total_receipt_amount' => $amount]);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * 合同冲抵其他合同总额计算
+     *
+     * @param      $info
+     * @param bool $auto_update
+     * @return float|int
+     */
+    public function calcMortgage($info, $auto_update = false)
+    {
+        $amount = Db::name('contract_receipt')->where([
+            'receipt_type' => 2,
+            'contract_no' => $info['contract_no']
+        ])->sum('receipt_amount');
+        if ($auto_update) {
+            Db::name('contract')->where('contract_no', $info['contract_no'])->update(['mortgage_amount' => $amount]);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * 其他合同余额冲抵总额计算
+     *
+     * @param      $info
+     * @param bool $auto_update
+     * @return float|int
+     */
+    public function calcCharge($info, $auto_update = false)
+    {
+        $amount = Db::name('contract_receipt')->where([
+            'receipt_type' => 2,
+            'contract_id' => $info['contract_id']
+        ])->sum('receipt_amount');
+        if ($auto_update) {
+            Db::name('contract')->where('contract_id', $info['contract_id'])->update(['charge_amount' => $amount]);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * 合同逾期总额计算
+     *
+     * @param      $info
+     * @param bool $auto_update
+     * @return float|int
+     */
+    public function calcOverdue($info, $auto_update = false)
+    {
+        $amount1 = Db::name('contract_expect')->where([
+            'contract_id' => $info['contract_id'],
+            'expect_date' => ['<', date('Y-m-d')]
+        ])->sum('expect_amount');
+        $amount2 = Db::name('contract_receipt')->where([
+            'expect_date' => ['<', date('Y-m-d')],
+            'receipt_date' => ['exp', Db::raw('<= cr.expect_date')],
+            'contract_id' => $info['contract_id']
+        ])->sum('receipt_amount');
+        $amount = $amount1 - $amount2;
+        if ($auto_update) {
+            Db::name('contract')->where('contract_id', $info['contract_id'])->update(['overdue_amount' => $amount]);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * 合同累计代理服务费计算
+     *
+     * @param      $info
+     * @param bool $auto_update
+     * @return float|int
+     */
+    public function calcAgencyFee($info, $auto_update = false)
+    {
+        $amount = Db::name('contract_receipt')->where([
+            'contract_id' => $info['contract_id']
+        ])->sum('agency_fee_amount');
+        if ($auto_update) {
+            Db::name('contract')->where('contract_id', $info['contract_id'])->update(['agency_fee_amount' => $amount]);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * 合同累计权责计算
+     *
+     * @param      $info
+     * @param bool $auto_update
+     * @return float|int
+     */
+    public function calcDuty($info, $auto_update = false)
+    {
+        $amount = Db::name('contract_duty')->where([
+            'contract_id' => $info['contract_id']
+        ])->value('duty_amount');
+        if ($auto_update) {
+            Db::name('contract')->where('contract_id', $info['contract_id'])->update(['duty_amount' => $amount]);
+        }
+
+        return $amount;
     }
 }
