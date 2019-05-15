@@ -18,8 +18,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for contract
 -- ----------------------------
-DROP TABLE IF EXISTS `contract`;
-CREATE TABLE `contract` (
+DROP TABLE IF EXISTS `mgtv_contract`;
+CREATE TABLE `mgtv_contract` (
   `contract_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `launch_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '发起时间',
   `flow_id` varchar(50) NOT NULL DEFAULT '' COMMENT '流程审批id',
@@ -73,8 +73,8 @@ CREATE TABLE `contract` (
 -- ----------------------------
 -- Table structure for contract_direct
 -- ----------------------------
-DROP TABLE IF EXISTS `contract_direct`;
-CREATE TABLE `contract_direct` (
+DROP TABLE IF EXISTS `mgtv_contract_direct`;
+CREATE TABLE `mgtv_contract_direct` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `contract_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同id',
   `direct_group` varchar(50) NOT NULL DEFAULT '' COMMENT '直客组',
@@ -89,8 +89,8 @@ CREATE TABLE `contract_direct` (
 -- ----------------------------
 -- Table structure for contract_duty
 -- ----------------------------
-DROP TABLE IF EXISTS `contract_duty`;
-CREATE TABLE `contract_duty` (
+DROP TABLE IF EXISTS `mgtv_contract_duty`;
+CREATE TABLE `mgtv_contract_duty` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `contract_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同id',
   `duty_amount` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '权责总额',
@@ -115,8 +115,8 @@ CREATE TABLE `contract_duty` (
 -- ----------------------------
 -- Table structure for contract_expect
 -- ----------------------------
-DROP TABLE IF EXISTS `contract_expect`;
-CREATE TABLE `contract_expect` (
+DROP TABLE IF EXISTS `mgtv_contract_expect`;
+CREATE TABLE `mgtv_contract_expect` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `contract_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同id',
   `expect_date` date NOT NULL COMMENT '应收日期',
@@ -131,8 +131,8 @@ CREATE TABLE `contract_expect` (
 -- ----------------------------
 -- Table structure for contract_receipt
 -- ----------------------------
-DROP TABLE IF EXISTS `contract_receipt`;
-CREATE TABLE `contract_receipt` (
+DROP TABLE IF EXISTS `mgtv_contract_receipt`;
+CREATE TABLE `mgtv_contract_receipt` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `contract_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '合同id',
   `expect_date` date NOT NULL COMMENT '应收日期',
