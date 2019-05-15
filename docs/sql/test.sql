@@ -110,7 +110,7 @@ CREATE TABLE `contract_duty` (
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `_contract_id` (`contract_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='合同权责信息';
 
 -- ----------------------------
 -- Table structure for contract_expect
